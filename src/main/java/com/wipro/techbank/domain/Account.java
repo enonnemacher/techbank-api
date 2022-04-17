@@ -1,4 +1,4 @@
-package com.wipro.techbank.controller;
+package com.wipro.techbank.domain;
 
 import java.util.ArrayList;
 import java.util.List;

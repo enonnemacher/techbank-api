@@ -1,4 +1,4 @@
-package com.wipro.techbank.controller;
+package com.wipro.techbank.domain;
 
 public class Client {
 
