@@ -10,4 +10,10 @@ public abstract class Account {
     private CreditCard creditCard;
 
     protected List<Operation> statement = new ArrayList<>();
+
+    public void deposit(){}
+
+    public abstract void withDraw();
+
+    public abstract void transfer();
 }
