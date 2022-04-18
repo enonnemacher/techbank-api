@@ -5,6 +5,8 @@ import com.wipro.techbank.dtos.CreditCardResponseDto;
 import com.wipro.techbank.dtos.CreditCardRequestDto;
 import com.wipro.techbank.repositories.CreditCardRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -28,6 +30,13 @@ public class CreditCardService {
         entity = creditCardRepository.save(entity);
         return new CreditCardResponseDto(entity);
     }
+
+    public Page<CreditCardResponseDto> findAllPaged(Pageable pageable) {
+        Page<CreditCard> categories = creditCardRepository.findAll(pageable);
+        return categories.map(CreditCardResponseDto::new);
+    }
+
+    
 
     private void copyDtoToEntity(CreditCardRequestDto dto, CreditCard entity) {
         Double initialUsedLimit = 0.0;
