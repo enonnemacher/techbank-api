@@ -1,7 +1,7 @@
 package com.wipro.techbank.services;
 
 import com.wipro.techbank.domain.CreditCard;
-import com.wipro.techbank.dtos.CreditCardDto;
+import com.wipro.techbank.dtos.CreditCardResponseDto;
 import com.wipro.techbank.dtos.CreditCardRequestDto;
 import com.wipro.techbank.repositories.CreditCardRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,11 +22,11 @@ public class CreditCardService {
     @Autowired
     private CreditCardRepository creditCardRepository;
 
-    public CreditCardDto create(CreditCardRequestDto dto) {
+    public CreditCardResponseDto create(CreditCardRequestDto dto) {
         CreditCard entity = new CreditCard();
         copyDtoToEntity(dto, entity);
         entity = creditCardRepository.save(entity);
-        return new CreditCardDto(entity);
+        return new CreditCardResponseDto(entity);
     }
 
     private void copyDtoToEntity(CreditCardRequestDto dto, CreditCard entity) {
