@@ -32,5 +32,10 @@ public class CreditCardControllers {
         Page<CreditCardResponseDto> list = creditCardService.findAllPaged(pageable);
         return ResponseEntity.ok(list);
     }
+
+    @GetMapping(value = "/{id}")
+    public ResponseEntity<CreditCardResponseDto> findById(@PathVariable Long id) {
+        return ResponseEntity.ok(creditCardService.findById(id));
+    }
     
 }
