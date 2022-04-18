@@ -37,5 +37,11 @@ public class CreditCardControllers {
     public ResponseEntity<CreditCardResponseDto> findById(@PathVariable Long id) {
         return ResponseEntity.ok(creditCardService.findById(id));
     }
+
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        creditCardService.delete(id);
+        return ResponseEntity.noContent().build();
+    }
     
 }
