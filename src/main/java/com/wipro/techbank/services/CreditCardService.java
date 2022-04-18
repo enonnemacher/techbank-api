@@ -4,14 +4,17 @@ import com.wipro.techbank.domain.CreditCard;
 import com.wipro.techbank.dtos.CreditCardResponseDto;
 import com.wipro.techbank.dtos.CreditCardRequestDto;
 import com.wipro.techbank.repositories.CreditCardRepository;
+import com.wipro.techbank.services.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Calendar;
+import java.util.Optional;
 
 
 @Service
@@ -32,8 +35,15 @@ public class CreditCardService {
     }
 
     public Page<CreditCardResponseDto> findAllPaged(Pageable pageable) {
-        Page<CreditCard> categories = creditCardRepository.findAll(pageable);
-        return categories.map(CreditCardResponseDto::new);
+        Page<CreditCard> creditCards = creditCardRepository.findAll(pageable);
+        return creditCards.map(CreditCardResponseDto::new);
+    }
+
+    @Transactional(readOnly = true)
+    public CreditCardResponseDto findById(Long id) {
+        Optional<CreditCard> optionalCreditCard = creditCardRepository.findById(id);
+        CreditCard entity = optionalCreditCard.orElseThrow(() -> new ResourceNotFoundException("Entidade não econtrada"));
+        return new CreditCardResponseDto(entity);
     }
 
     
