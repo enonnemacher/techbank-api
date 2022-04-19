@@ -1,7 +1,7 @@
-package com.wipro.techbank.service;
+package com.wipro.techbank.services;
 
 import com.wipro.techbank.domain.Client;
-import com.wipro.techbank.repository.ClientRepository;
+import com.wipro.techbank.repositories.ClientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
