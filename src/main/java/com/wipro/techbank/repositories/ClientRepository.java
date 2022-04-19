@@ -1,4 +1,4 @@
-package com.wipro.techbank.repository;
+package com.wipro.techbank.repositories;
 
 import com.wipro.techbank.domain.Client;
 import org.springframework.data.jpa.repository.JpaRepository;
