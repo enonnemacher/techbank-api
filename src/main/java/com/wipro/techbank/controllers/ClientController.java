@@ -31,12 +31,12 @@ public class ClientController {
         return clientService.findById(id);
     }
 
-    @PutMapping(path = "{/id}")
+    @PutMapping(path = "/{id}")
     public Client updateClient(@PathVariable Long id, @RequestBody Client client) {
         return clientService.update(id, client);
     }
 
-    @DeleteMapping(path = "{/id}")
+    @DeleteMapping(path = "/{id}")
     public void removeClient(@PathVariable Long id) {
         clientService.remove(id);
     }
