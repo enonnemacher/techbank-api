@@ -2,36 +2,23 @@ package com.wipro.techbank.domain;
 
 import lombok.*;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.MappedSuperclass;
-import java.util.ArrayList;
-import java.util.List;
+import javax.persistence.*;
+import java.io.Serializable;
 
+
+@MappedSuperclass
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-@ToString
-@MappedSuperclass
-public abstract class Account {
+public abstract class Account  implements Serializable {
+    private static final long serialVersionUID = -6666350505838863149L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @EqualsAndHashCode.Include
-    private Long number = 0L;
-    protected Double balance;
-    private Client client;
-    private CreditCard creditCard;
+    private Long id;
 
+    private Double balance;
 
-//    public void deposit(Double value){
-//        this.balance+= value;
-//    }
-//
-//    public abstract void withDraw(Double value);
-//
-//    public abstract void transfer(Double value, Account account);
 }

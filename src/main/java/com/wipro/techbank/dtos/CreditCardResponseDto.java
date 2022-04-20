@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @ToString
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class CreditCardResponseDto implements Serializable {
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 377217321776086460L;
 
     @EqualsAndHashCode.Include
     private Long id;

@@ -1,45 +1,43 @@
 package com.wipro.techbank.domain;
 
-import lombok.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
-@Table(name = "tb_special_account")
 @Getter
 @Setter
-@AllArgsConstructor
-@NoArgsConstructor
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
-@ToString
-public class SpecialAccount extends Account {
+@Table(name = "tb_special_account")
+public class SpecialAccount extends Account  implements Serializable {
+    private static final long serialVersionUID = -2401085526099065807L;
 
-    @Column(nullable = false)
-    private Double limit;
+    private Double creditSpecial;
+    private Double creditSpecialUsed = 0.0;
 
-    private Double usedLimit;
+    @JsonIgnore
+    @ManyToMany
+    @JoinTable(name = "tb_special_account_client",
+            joinColumns = @JoinColumn(name = "account_id"),
+            inverseJoinColumns = @JoinColumn(name = "client_id"))
+    private List<Client> clients = new ArrayList<>();
 
-//    @Override
-//    public void withDraw(Double value) {
-//        if (value <= this.getBalance()) {
-//
-//            this.balance -= value;
-//
-//        } else if (value <= (this.getBalance() + this.getLimit())) {
-//
-//            this.usedLimit = this.balance - value;
-//            this.balance = this.usedLimit;
-//
-//        } else {
-//            throw new RuntimeException("Saldo Insuficiente");
-//        }
-//    }
-//
-//    @Override
-//    public void transfer(Double value, Account account) {
-//        if (value <= (this.getBalance() + this.getLimit())) {
-//            this.withDraw(value);
-//            account.deposit(value);
-//        }
-//    }
+    @JsonIgnore
+    @ManyToMany
+    @JoinTable(name = "tb_special_account_credit_card",
+            joinColumns = @JoinColumn(name = "account_id"),
+            inverseJoinColumns = @JoinColumn(name = "credit_card_id"))
+    private List<CreditCard> creditCards = new ArrayList<>();
+
+
+    @JsonIgnore
+    @ManyToMany
+    @JoinTable(name = "tb_special_account_operation",
+            joinColumns = @JoinColumn(name = "account_id"),
+            inverseJoinColumns = @JoinColumn(name = "operation_id"))
+    private List<Operation> operations = new ArrayList<>();
 }

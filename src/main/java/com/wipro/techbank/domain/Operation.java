@@ -1,8 +1,11 @@
 package com.wipro.techbank.domain;
 
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
+import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
@@ -13,15 +16,17 @@ import java.util.Date;
 @NoArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString
-public class Operation {
+public class Operation  implements Serializable {
+    private static final long serialVersionUID = 6891423659802525008L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @EqualsAndHashCode.Include
     private Long id;
 
-    @Column(nullable = false)
-    private Date date;
+    @Column(nullable = false, columnDefinition = "datetime")
+    @CreationTimestamp
+    private LocalDateTime date;
 
     @Column(nullable = false)
     private String description;
@@ -29,6 +34,8 @@ public class Operation {
     @Column(nullable = false)
     private Double value;
 
-    @Column(nullable = false)
-    private  Account account;
+//    @PrePersist
+//    public void prePersist() {
+//        date = LocalDateTime.now();
+//    }
 }

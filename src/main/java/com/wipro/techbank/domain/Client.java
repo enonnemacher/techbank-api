@@ -14,7 +14,7 @@ import java.io.Serializable;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString
 public class Client implements Serializable {
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 5373459523319006941L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
