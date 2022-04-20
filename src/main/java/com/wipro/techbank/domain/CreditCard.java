@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString
 public class CreditCard implements Serializable {
-    private static final long serialVersionUID = 3L;
+    private static final long serialVersionUID = -8194331057711583877L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,10 +34,6 @@ public class CreditCard implements Serializable {
     private Double limitCredit;
 
     private Double usedLimit;
-
-    public void toBuy(Double value) {
-        this.usedLimit += value;
-    }
 
 }
 

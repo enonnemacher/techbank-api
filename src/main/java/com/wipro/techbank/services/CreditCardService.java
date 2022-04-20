@@ -59,8 +59,6 @@ public class CreditCardService {
         }
     }
 
-    
-
     private void copyDtoToEntity(CreditCardRequestDto dto, CreditCard entity) {
         Double initialUsedLimit = 0.0;
 
@@ -72,17 +70,17 @@ public class CreditCardService {
     }
 
     private String generateNumbers(int limit) {
-        String number = "";
+        StringBuilder number = new StringBuilder();
         int range = 10;
 
         for (int index = 0; index < limit; index++) {
             int random = (int) (Math.random() * range);
             if (index % 4 == 0 && index > 0) {
-                number += " ";
+                number.append(" ");
             }
-            number += random;
+            number.append(random);
         }
-        return number;
+        return number.toString();
     }
 
     private LocalDateTime generateExpirationDate() {
