@@ -2,13 +2,12 @@ package com.wipro.techbank.services;
 
 import com.wipro.techbank.domain.CheckingAccount;
 import com.wipro.techbank.domain.Client;
-import com.wipro.techbank.domain.CreditCard;
 import com.wipro.techbank.domain.Transaction;
 import com.wipro.techbank.dtos.*;
 import com.wipro.techbank.repositories.CheckingAccountRepository;
 import com.wipro.techbank.repositories.ClientRepository;
 import com.wipro.techbank.repositories.CreditCardRepository;
-import com.wipro.techbank.repositories.OperationRepository;
+import com.wipro.techbank.repositories.TransactionRepository;
 import com.wipro.techbank.services.exceptions.DataBasesException;
 import com.wipro.techbank.services.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +33,7 @@ public class CheckingAccountService {
     private CreditCardRepository creditCardRepository;
 
     @Autowired
-    private OperationRepository operationRepository;
+    private TransactionRepository transactionRepository;
 
     public CheckingAccountDto create(CheckingAccountDto dto) {
         CheckingAccount entity = new CheckingAccount();
@@ -67,21 +66,26 @@ public class CheckingAccountService {
 
     private void copyDtoToEntity(CheckingAccountDto dto, CheckingAccount entity) {
         entity.setBalance(dto.getBalance());
+        Client client = new Client();
+        client.setCpf(dto.getClient().getCpf());
+        copyClientDtoToClientEntity(entity.getClient(), dto.getClient());
 
-        entity.getClients().clear();
-        for (ClientDto clientDto : dto.getClients()) {
-            Client client = clientRepository.getById(clientDto.getId());
-            entity.getClients().add(client);
-        }
-        entity.getCreditCards().clear();
-        for (CreditCardResponseDto creditCardDto : dto.getCreditCards()) {
-            CreditCard creditCard = creditCardRepository.getById(creditCardDto.getId());
-            entity.getCreditCards().add(creditCard);
-        }
+        // TODO: falta setar o cartão de credito
+
         entity.getTransactions().clear();
-        for (OperationResponseDto operationResponseDto : dto.getOperations()) {
-            Transaction transaction = operationRepository.getById(operationResponseDto.getId());
+        for (TransactionResponseDto transactionResponseDto : dto.getOperations()) {
+            Transaction transaction = transactionRepository.getById(transactionResponseDto.getId());
             entity.getTransactions().add(transaction);
         }
     }
+
+    // TODO: pensar uma melhor forma de criar o método
+    private void copyClientDtoToClientEntity(Client entity, ClientDto dto) {
+        entity.setId(dto.getId());
+        entity.setCpf(dto.getCpf());
+        entity.setEmail(dto.getEmail());
+        entity.setName(dto.getName());
+        entity.setPhoneNumber(dto.getPhoneNumber());
+    }
+
 }
