@@ -36,8 +36,8 @@ public class ClientController {
     }
 
     @GetMapping(path = "/{id}")
-    public Client findById(@PathVariable Long id) {
-        return clientService.findById(id);
+    public ResponseEntity<ClientDto> findById(@PathVariable Long id) {
+        return ResponseEntity.ok(clientService.findById(id));
     }
 
     @PutMapping(path = "/{id}")

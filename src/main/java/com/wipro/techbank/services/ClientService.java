@@ -3,12 +3,13 @@ package com.wipro.techbank.services;
 import com.wipro.techbank.domain.Client;
 import com.wipro.techbank.dtos.ClientDto;
 import com.wipro.techbank.repositories.ClientRepository;
+import com.wipro.techbank.services.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ClientService {
@@ -28,19 +29,20 @@ public class ClientService {
         return clientsList.map(ClientDto::new);
     }
 
-    public Client findById(Long id) {
-        //return clientRepository.findById(id).orElseThrow() -> NotFoundException("client");
-        return null;
+    public ClientDto findById(Long id) {
+        Optional<Client> client = clientRepository.findById(id);
+        Client entity = client.orElseThrow(() -> new ResourceNotFoundException("Entidade não encontrada."));
+        return new ClientDto(entity);
     }
 
     public Client update(Long id, Client client) {
-        Client findClient = findById(id);
+        //Client findClient = findById(id);
         //efetuar validação da busca
         return clientRepository.save(client);
     }
 
     public void remove(Long id) {
-        Client client = findById(id);
+        //Client client = findById(id);
         // efetuar validação
         /*
         if (clientRepository.findById(id)){
