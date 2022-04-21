@@ -19,6 +19,7 @@ public abstract class Account  implements Serializable {
     private static final long serialVersionUID = -6666350505838863149L;
 
     @Id
+    @EqualsAndHashCode.Include
     private Long id;
 
     private Double balance;
