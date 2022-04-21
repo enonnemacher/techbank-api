@@ -1,7 +1,6 @@
 package com.wipro.techbank.dtos;
 
 import com.wipro.techbank.domain.CheckingAccount;
-import com.wipro.techbank.domain.Client;
 import lombok.*;
 
 import java.io.Serializable;
@@ -21,19 +20,14 @@ public class CheckingAccountDto  implements Serializable {
 
     private Double balance;
 
-    private List<ClientDto> clients = new ArrayList<>();
+    private ClientDto client;
 
-    private List<CreditCardResponseDto> creditCards = new ArrayList<>();
+    private CreditCardResponseDto creditCard;
 
-    private List<OperationResponseDto> operations = new ArrayList<>();
+    private List<TransactionResponseDto> operations = new ArrayList<>();
 
-    public CheckingAccountDto(CheckingAccount checkingAccount) {
-        id = checkingAccount.getId();
-        balance = checkingAccount.getBalance();
-    }
-
-    public CheckingAccountDto(CheckingAccount entity, List<Client> clients) {
-        this(entity);
-        clients.forEach(client -> this.clients.add(new ClientDto(client)));
+    public CheckingAccountDto(CheckingAccount entity) {
+        id = entity.getId();
+        balance = entity.getBalance();
     }
 }
