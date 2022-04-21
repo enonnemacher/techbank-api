@@ -8,12 +8,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-@MappedSuperclass
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@Entity
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public abstract class Account  implements Serializable {
     private static final long serialVersionUID = -6666350505838863149L;
 
