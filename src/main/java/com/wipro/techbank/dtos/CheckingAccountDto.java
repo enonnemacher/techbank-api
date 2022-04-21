@@ -2,13 +2,8 @@ package com.wipro.techbank.dtos;
 
 import com.wipro.techbank.domain.CheckingAccount;
 import com.wipro.techbank.domain.Client;
-import com.wipro.techbank.domain.CreditCard;
-import com.wipro.techbank.domain.Operation;
 import lombok.*;
 
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;

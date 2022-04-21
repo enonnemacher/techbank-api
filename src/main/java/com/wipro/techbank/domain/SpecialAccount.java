@@ -39,5 +39,5 @@ public class SpecialAccount extends Account  implements Serializable {
     @JoinTable(name = "tb_special_account_operation",
             joinColumns = @JoinColumn(name = "account_id"),
             inverseJoinColumns = @JoinColumn(name = "operation_id"))
-    private List<Operation> operations = new ArrayList<>();
+    private List<Transaction> transactions = new ArrayList<>();
 }

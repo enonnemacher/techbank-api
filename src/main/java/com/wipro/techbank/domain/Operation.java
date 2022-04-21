@@ -1,41 +1,10 @@
 package com.wipro.techbank.domain;
 
-import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
+public enum Operation {
 
-import javax.persistence.*;
-import java.io.Serializable;
-import java.time.LocalDateTime;
-import java.util.Date;
+    WITHDRAW("WITHDRAW"),
+    DEPOSIT("DEPOSIT");
 
-@Entity
-@Table(name = "tb_operation")
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
-@ToString
-public class Operation  implements Serializable {
-    private static final long serialVersionUID = 6891423659802525008L;
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @EqualsAndHashCode.Include
-    private Long id;
-
-    @Column(nullable = false, columnDefinition = "datetime")
-    @CreationTimestamp
-    private LocalDateTime date;
-
-    @Column(nullable = false)
-    private String description;
-
-    @Column(nullable = false)
-    private Double value;
-
-//    @PrePersist
-//    public void prePersist() {
-//        date = LocalDateTime.now();
-//    }
+    Operation(String type) {
+    }
 }

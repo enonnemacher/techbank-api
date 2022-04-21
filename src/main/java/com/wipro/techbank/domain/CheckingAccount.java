@@ -1,6 +1,5 @@
 package com.wipro.techbank.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
@@ -35,6 +34,6 @@ public class CheckingAccount extends Account  implements Serializable {
     @JoinTable(name = "tb_checking_account_operation",
             joinColumns = @JoinColumn(name = "account_id"),
             inverseJoinColumns = @JoinColumn(name = "operation_id"))
-    private List<Operation> operations = new ArrayList<>();
+    private List<Transaction> transactions = new ArrayList<>();
 
 }

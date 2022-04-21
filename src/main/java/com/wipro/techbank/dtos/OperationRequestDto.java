@@ -1,11 +1,10 @@
 package com.wipro.techbank.dtos;
 
-import com.wipro.techbank.domain.Operation;
+import com.wipro.techbank.domain.Transaction;
 import lombok.*;
 
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.util.Date;
 
 @Getter
 @Setter
@@ -24,7 +23,7 @@ public class OperationRequestDto implements Serializable {
     @NotNull(message = "Valor da operação é obrigatório.")
     private Double value;
 
-    public OperationRequestDto(Operation entity) {
+    public OperationRequestDto(Transaction entity) {
         id = entity.getId();
         description = entity.getDescription();
         value = entity.getValue();

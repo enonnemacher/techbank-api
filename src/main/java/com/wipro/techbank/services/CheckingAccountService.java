@@ -3,7 +3,7 @@ package com.wipro.techbank.services;
 import com.wipro.techbank.domain.CheckingAccount;
 import com.wipro.techbank.domain.Client;
 import com.wipro.techbank.domain.CreditCard;
-import com.wipro.techbank.domain.Operation;
+import com.wipro.techbank.domain.Transaction;
 import com.wipro.techbank.dtos.*;
 import com.wipro.techbank.repositories.CheckingAccountRepository;
 import com.wipro.techbank.repositories.ClientRepository;
@@ -78,10 +78,10 @@ public class CheckingAccountService {
             CreditCard creditCard = creditCardRepository.getById(creditCardDto.getId());
             entity.getCreditCards().add(creditCard);
         }
-        entity.getOperations().clear();
+        entity.getTransactions().clear();
         for (OperationResponseDto operationResponseDto : dto.getOperations()) {
-            Operation operation = operationRepository.getById(operationResponseDto.getId());
-            entity.getOperations().add(operation);
+            Transaction transaction = operationRepository.getById(operationResponseDto.getId());
+            entity.getTransactions().add(transaction);
         }
     }
 }
