@@ -46,7 +46,8 @@ public class ClientController {
     }
 
     @DeleteMapping(path = "/{id}")
-    public void removeClient(@PathVariable Long id) {
+    public ResponseEntity<Void> removeClient(@PathVariable Long id) {
         clientService.remove(id);
+        return ResponseEntity.noContent().build();
     }
 }

@@ -3,8 +3,11 @@ package com.wipro.techbank.services;
 import com.wipro.techbank.domain.Client;
 import com.wipro.techbank.dtos.ClientDto;
 import com.wipro.techbank.repositories.ClientRepository;
+import com.wipro.techbank.services.exceptions.DataBasesException;
 import com.wipro.techbank.services.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -42,13 +45,13 @@ public class ClientService {
     }
 
     public void remove(Long id) {
-        //Client client = findById(id);
-        // efetuar validação
-        /*
-        if (clientRepository.findById(id)){
-            throw new NotFoundException();
-        }*/
-        clientRepository.deleteById(id);
+        try {
+            clientRepository.deleteById(id);
+        } catch (EmptyResultDataAccessException e){
+            throw new ResourceNotFoundException("Id " + id + " não encontrado.");
+        } catch (DataIntegrityViolationException e){
+            throw new DataBasesException("Violação de integridade");
+        }
     }
 
     private void copyDtoToEntity(ClientDto clientDto, Client client) {
