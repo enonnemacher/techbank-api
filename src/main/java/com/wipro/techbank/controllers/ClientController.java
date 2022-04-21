@@ -1,11 +1,15 @@
 package com.wipro.techbank.controllers;
 
 import com.wipro.techbank.domain.Client;
+import com.wipro.techbank.dtos.ClientDto;
 import com.wipro.techbank.services.ClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -17,8 +21,11 @@ public class ClientController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Client save(@RequestBody Client client) {
-        return clientService.save(client);
+    public ResponseEntity<ClientDto> save(@RequestBody ClientDto clientDto) {
+        ClientDto client = clientService.save(clientDto);
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri().path("/{id}")
+                .buildAndExpand(clientDto.getId()).toUri();
+        return ResponseEntity.created(uri).body(clientDto);
     }
 
     @GetMapping
