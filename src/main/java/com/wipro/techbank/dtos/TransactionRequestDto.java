@@ -1,11 +1,11 @@
 package com.wipro.techbank.dtos;
 
+import com.wipro.techbank.domain.Operation;
 import com.wipro.techbank.domain.Transaction;
 import lombok.*;
 
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -13,22 +13,20 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @ToString
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class OperationResponseDto implements Serializable {
-    private static final long serialVersionUID = 377217321776086460L;
+public class TransactionRequestDto implements Serializable {
+    private static final long serialVersionUID = 1950750423932410178L;
 
     private Long id;
-    private LocalDateTime date;
 
     @NotNull(message = "Descrição da operação obrigatória.")
-    private String description;
+    private Operation operation;
 
     @NotNull(message = "Valor da operação é obrigatório.")
     private Double value;
 
-    public OperationResponseDto(Transaction entity) {
+    public TransactionRequestDto(Transaction entity) {
         id = entity.getId();
-        date = entity.getDate();
-        description = entity.getDescription();
+        operation = entity.getOperation();
         value = entity.getValue();
     }
 }
