@@ -25,16 +25,15 @@ public class Transaction implements Serializable {
 
     @Column(nullable = false, columnDefinition = "datetime")
     @CreationTimestamp
-    private LocalDateTime date;
+    private LocalDateTime createdAt;
 
     @Column(nullable = false)
-    private String description;
+    private Operation operation;
 
     @Column(nullable = false)
     private Double value;
 
-//    @PrePersist
-//    public void prePersist() {
-//        date = LocalDateTime.now();
-//    }
+    @ManyToOne
+    @JoinColumn(nullable = false)
+    private Account account;
 }
