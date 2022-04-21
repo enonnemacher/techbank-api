@@ -4,13 +4,14 @@ import com.wipro.techbank.domain.Client;
 import com.wipro.techbank.dtos.ClientDto;
 import com.wipro.techbank.services.ClientService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
-import java.util.List;
 
 @RestController
 @RequestMapping("/clients")
@@ -29,8 +30,9 @@ public class ClientController {
     }
 
     @GetMapping
-    public List<Client> findAll() {
-        return clientService.findAll();
+    public ResponseEntity<Page<ClientDto>> findAll(Pageable pageable) {
+        Page<ClientDto> clientList = clientService.findAll(pageable);
+        return ResponseEntity.ok(clientList);
     }
 
     @GetMapping(path = "/{id}")

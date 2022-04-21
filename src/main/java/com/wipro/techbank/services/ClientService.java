@@ -4,6 +4,8 @@ import com.wipro.techbank.domain.Client;
 import com.wipro.techbank.dtos.ClientDto;
 import com.wipro.techbank.repositories.ClientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,9 +23,9 @@ public class ClientService {
         return new ClientDto(entity);
     }
 
-    public List<Client> findAll() {
-        List<Client> clientsList = clientRepository.findAll();
-        return clientsList;
+    public Page<ClientDto> findAll(Pageable pageable) {
+        Page<Client> clientsList = clientRepository.findAll(pageable);
+        return clientsList.map(ClientDto::new);
     }
 
     public Client findById(Long id) {
