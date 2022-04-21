@@ -38,10 +38,12 @@ public class ClientService {
         return new ClientDto(entity);
     }
 
-    public Client update(Long id, Client client) {
-        //Client findClient = findById(id);
-        //efetuar validação da busca
-        return clientRepository.save(client);
+    public ClientDto update(Long id, ClientDto clientDto) {
+        Client entity = clientRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Cliente não encontrado."));
+        //Client entity = clientRepository.getById(id);
+        copyDtoToEntity(clientDto, entity);
+        entity = clientRepository.save(entity);
+        return new ClientDto(entity);
     }
 
     public void remove(Long id) {
@@ -62,5 +64,3 @@ public class ClientService {
         client.setEmail(clientDto.getEmail());
     }
 }
-
-
