@@ -1,11 +1,6 @@
 package com.wipro.techbank.services;
 
-import com.wipro.techbank.domain.CreditCard;
-import com.wipro.techbank.domain.Operation;
 import com.wipro.techbank.domain.SpecialAccount;
-import com.wipro.techbank.dtos.CreditCardRequestDto;
-import com.wipro.techbank.dtos.CreditCardResponseDto;
-import com.wipro.techbank.dtos.OperationRequestDto;
 import com.wipro.techbank.dtos.SpecialAccountDto;
 import com.wipro.techbank.repositories.SpecialAccountRepository;
 import com.wipro.techbank.services.exceptions.DataBasesException;
@@ -16,8 +11,6 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class SpecialAccountService {

@@ -1,6 +1,5 @@
 package com.wipro.techbank.dtos;
 
-import com.wipro.techbank.domain.CheckingAccount;
 import com.wipro.techbank.domain.Client;
 import com.wipro.techbank.domain.SpecialAccount;
 import lombok.*;
@@ -29,7 +28,7 @@ public class SpecialAccountDto {
 
     private List<CreditCardResponseDto> creditCards = new ArrayList<>();
 
-    private List<OperationResponseDto> operations = new ArrayList<>();
+    private List<TransactionResponseDto> operations = new ArrayList<>();
 
 
     public SpecialAccountDto(SpecialAccount specialAccount) {
