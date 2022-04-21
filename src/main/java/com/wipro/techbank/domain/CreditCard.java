@@ -1,16 +1,19 @@
 package com.wipro.techbank.domain;
+import com.wipro.techbank.Utils.Utils;
 import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Calendar;
+
+import static com.wipro.techbank.Utils.Utils.*;
 
 @Entity
 @Table(name = "tb_credit_card")
 @Getter
 @Setter
-@AllArgsConstructor
-@NoArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString
 public class CreditCard implements Serializable {
@@ -34,6 +37,25 @@ public class CreditCard implements Serializable {
     private Double limitCredit;
 
     private Double usedLimit;
+
+    public CreditCard() {
+        expirationDate = Utils.generateExpirationDate();
+        securityCode = Short.valueOf(generateNumbers(LENGTH_SECURITY_CODE));
+        cardNumber = generateNumbers(LENGTH_CARD_NUMBER);
+        usedLimit = 0.0;
+    }
+
+    public CreditCard(Double limitCredit) {
+        this();
+        this.limitCredit = limitCredit;
+    }
+
+    public CreditCard(Long id, Double limitCredit) {
+        this(limitCredit);
+        this.id = id;
+    }
+
+
 
 }
 
