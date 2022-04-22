@@ -14,6 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
+@Table(name = "tb_account")
 @Inheritance(strategy = InheritanceType.JOINED)
 public abstract class Account  implements Serializable {
     private static final long serialVersionUID = -6666350505838863149L;
