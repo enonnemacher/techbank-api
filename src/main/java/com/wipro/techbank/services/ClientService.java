@@ -39,8 +39,7 @@ public class ClientService {
     }
 
     public ClientDto update(Long id, ClientDto clientDto) {
-        Client entity = clientRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Cliente não encontrado."));
-        //Client entity = clientRepository.getById(id);
+        Client entity = clientRepository.getById(id);
         copyDtoToEntity(clientDto, entity);
         entity = clientRepository.save(entity);
         return new ClientDto(entity);
@@ -57,7 +56,6 @@ public class ClientService {
     }
 
     private void copyDtoToEntity(ClientDto clientDto, Client client) {
-        client.setId(clientDto.getId());
         client.setName(clientDto.getName());
         client.setCpf(clientDto.getCpf());
         client.setPhoneNumber(clientDto.getPhoneNumber());
