@@ -25,8 +25,8 @@ public class ClientController {
     public ResponseEntity<ClientDto> save(@RequestBody ClientDto clientDto) {
         ClientDto client = clientService.save(clientDto);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri().path("/{id}")
-                .buildAndExpand(clientDto.getId()).toUri();
-        return ResponseEntity.created(uri).body(clientDto);
+                .buildAndExpand(client.getId()).toUri();
+        return ResponseEntity.created(uri).body(client);
     }
 
     @GetMapping
