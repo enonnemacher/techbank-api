@@ -83,7 +83,7 @@ class CreditCardServiceTest {
     }
 
     @Test
-    void findByIdShouldReturnCategoryDtoWhenIdExixts() {
+    void findByIdShouldReturnCreditCardResponseDtoWhenIdExixts() {
         CreditCardResponseDto result = creditCardService.findById(existsId);
 
         // Assert
