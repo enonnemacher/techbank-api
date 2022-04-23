@@ -18,8 +18,8 @@ public class CheckingAccountController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void create(@RequestBody CheckingAccountRequestDto checkingAccount){
-        checkingAccountService.create(checkingAccount);
+    public CheckingAccountResponseDto create(@RequestBody CheckingAccountRequestDto checkingAccount){
+        return checkingAccountService.create(checkingAccount);
     }
 
     @GetMapping("/{id}")
