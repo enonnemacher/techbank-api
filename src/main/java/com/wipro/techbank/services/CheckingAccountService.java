@@ -12,9 +12,12 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -46,6 +49,7 @@ public class CheckingAccountService {
         return toCheckingAccountDto(checkingAccountDb);
     }
 
+    @Transactional
     public CheckingAccountResponseDto create(CheckingAccountRequestDto checkingAccountRequestDto){
         try {
             CheckingAccount checkingAccount = toCheckingAccount(checkingAccountRequestDto);
@@ -57,14 +61,21 @@ public class CheckingAccountService {
 
     }
 
+    @Transactional
     public CheckingAccountResponseDto updateCheckingAccount(Long id, CheckingAccountRequestDto checkingAccountRequestDto){
-        Optional<CheckingAccount> optionalCheckingAccount = checkingAccountRepository.findById(id);
-        CheckingAccount checkingAccountDb = optionalCheckingAccount.orElseThrow(()->
-                new ResourceNotFoundException("Entidade não encontrada"));
+        try {
+            CheckingAccount entity = checkingAccountRepository.getById(id);
+            entity.setBalance(checkingAccountRequestDto.getBalance());
 
-        BeanUtils.copyProperties(checkingAccountRequestDto,checkingAccountDb);
-        checkingAccountRepository.save(checkingAccountDb);
-        return toCheckingAccountDto(checkingAccountDb);
+            if (checkingAccountRequestDto.getCreditCard() != null) {
+                copyDtoToEntityCreditCard(checkingAccountRequestDto, entity);
+            }
+            entity = checkingAccountRepository.save(entity);
+            return toCheckingAccountDto(entity);
+        } catch (EntityNotFoundException e) {
+            System.out.println(Arrays.toString(e.getStackTrace()));
+            throw new ResourceNotFoundException(String.format("Conta com id %d não foi encontrada.", id));
+        }
     }
 
     public void remove(Long id){
@@ -82,5 +93,21 @@ public class CheckingAccountService {
         CreditCard creditCard = creditCardRepository.getById(checkingAccountRequestDto.getCreditCard().getId());
         checkingAccountRequestDto.setCreditCard(new CreditCardResponseDto(creditCard));
         return modelMapper.map(checkingAccountRequestDto, CheckingAccount.class);
+    }
+
+    private void copyDtoToEntityClient(CheckingAccountRequestDto dto, CheckingAccount entity) {
+        Client client = clientRepository.getById(dto.getClient().getId());
+        dto.setClient(new ClientDto(client));
+        entity.setClient(client);
+    }
+
+    private void copyDtoToEntityCreditCard(CheckingAccountRequestDto dto, CheckingAccount entity) {
+        try {
+            CreditCard creditCard = creditCardRepository.getById(dto.getCreditCard().getId());
+            dto.setCreditCard(new CreditCardResponseDto(creditCard));
+            entity.setCreditCard(creditCard);
+        }catch (EntityNotFoundException e){
+            throw new ResourceNotFoundException(String.format("Cartão de Credito com ID %d não foi encontrado.", dto.getCreditCard().getId()));
+        }
     }
 }
