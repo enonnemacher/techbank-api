@@ -11,6 +11,7 @@ import java.io.Serializable;
 @Setter
 @Entity
 @Table(name = "tb_checking_account")
+@ToString
 public class CheckingAccount extends Account  implements Serializable {
     private static final long serialVersionUID = 9101340754629012324L;
 

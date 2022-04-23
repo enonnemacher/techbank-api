@@ -34,4 +34,8 @@ public class Transaction implements Serializable {
     @ManyToOne
     @JoinColumn(nullable = false)
     private Account account;
+
+    @Column(nullable = false)
+    private AccountType accountType;
+
 }

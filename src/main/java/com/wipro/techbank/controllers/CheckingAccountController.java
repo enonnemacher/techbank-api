@@ -3,9 +3,7 @@ package com.wipro.techbank.controllers;
 import com.wipro.techbank.dtos.CheckingAccountRequestDto;
 import com.wipro.techbank.dtos.CheckingAccountResponseDto;
 import com.wipro.techbank.services.CheckingAccountService;
-import com.wipro.techbank.services.exceptions.DataBasesException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -41,13 +39,9 @@ public class CheckingAccountController {
         return ResponseEntity.ok(checkingAccountService.findAll());
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?>  checkingAccountDelete(@PathVariable Long id){
-        try{
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<Void> checkingAccountDelete(@PathVariable Long id) {
         checkingAccountService.remove(id);
-            return  ResponseEntity.noContent().build();
-        }catch (DataIntegrityViolationException e){
-            throw new DataBasesException("Conta não pode ser removida por ter outra entidade em uso!");
-        }
+        return ResponseEntity.noContent().build();
     }
 }
