@@ -1,7 +1,9 @@
 package com.wipro.techbank.services;
 
+import com.wipro.techbank.domain.CheckingAccount;
 import com.wipro.techbank.domain.Client;
 import com.wipro.techbank.domain.SpecialAccount;
+import com.wipro.techbank.dtos.CheckingAccountResponseDto;
 import com.wipro.techbank.dtos.SpecialAccountRequestDto;
 import com.wipro.techbank.dtos.SpecialAccountResponseDto;
 import com.wipro.techbank.repositories.ClientRepository;
@@ -41,9 +43,9 @@ public class SpecialAccountService {
 
     public SpecialAccountResponseDto findById(Long id){
         Optional<SpecialAccount> optionalSpecialAccount = specialAccountRepository.findById(id);
-        SpecialAccount specialAccount = optionalSpecialAccount.orElseThrow(() ->
+        SpecialAccount specialAccountDb = optionalSpecialAccount.orElseThrow(()->
                 new ResourceNotFoundException("Entidade não encontrada"));
-        return toSpecialAccountDto(specialAccount);
+        return toSpecialAccountDto(specialAccountDb);
     }
 
     public void create(SpecialAccountRequestDto specialAccountRequestDto){
