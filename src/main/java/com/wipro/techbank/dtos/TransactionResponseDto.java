@@ -1,5 +1,6 @@
 package com.wipro.techbank.dtos;
 
+import com.wipro.techbank.domain.Account;
 import com.wipro.techbank.domain.Operation;
 import com.wipro.techbank.domain.Transaction;
 import lombok.*;
@@ -25,9 +26,12 @@ public class TransactionResponseDto implements Serializable {
 
     @NotNull(message = "Valor da operação é obrigatório.")
     private Double value;
+    @NotNull(message = "A conta é obrigatória.")
+    private Account account;
 
     public TransactionResponseDto(Transaction entity) {
         id = entity.getId();
+        account = entity.getAccount();
         date = entity.getCreatedAt();
         operation = entity.getOperation();
         value = entity.getValue();

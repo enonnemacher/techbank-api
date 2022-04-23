@@ -1,27 +1,24 @@
 package com.wipro.techbank.services;
 
-import com.wipro.techbank.domain.CheckingAccount;
 import com.wipro.techbank.domain.Client;
 import com.wipro.techbank.domain.SpecialAccount;
-import com.wipro.techbank.dtos.CheckingAccountResponseDto;
+import com.wipro.techbank.domain.Transaction;
 import com.wipro.techbank.dtos.SpecialAccountRequestDto;
 import com.wipro.techbank.dtos.SpecialAccountResponseDto;
 import com.wipro.techbank.repositories.ClientRepository;
 import com.wipro.techbank.repositories.SpecialAccountRepository;
-import com.wipro.techbank.services.exceptions.DataBasesException;
+import com.wipro.techbank.repositories.TransactionRepository;
 import com.wipro.techbank.services.exceptions.ResourceNotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import static com.wipro.techbank.domain.Operation.WITHDRAW;
 
 @Service
 public class SpecialAccountService {
@@ -33,6 +30,12 @@ public class SpecialAccountService {
 
     @Autowired
     private ModelMapper modelMapper;
+
+    @Autowired
+    private TransactionRepository transactionRepository;
+
+    @Autowired
+    private TransactionService transactionService;
 
     public List<SpecialAccountResponseDto> findAll(){
         return specialAccountRepository.findAll()
@@ -66,6 +69,39 @@ public class SpecialAccountService {
         BeanUtils.copyProperties(specialAccountRequestDto,specialAccountDb);
         specialAccountRepository.save(specialAccountDb);
         return toSpecialAccountDto(specialAccountDb);
+    }
+
+    public void withdraw(Long idSpecialAccount, Double value) {
+
+        SpecialAccount  specialAccount = specialAccountRepository.findById(idSpecialAccount).get();
+        if (value <= specialAccount.getBalance()) {
+            specialAccount.setBalance(specialAccount.getBalance() - value);
+
+            Transaction transaction = new Transaction();
+            transaction.setAccount(specialAccount);
+            transaction.setOperation(WITHDRAW);
+            transaction.setValue(value);
+
+            transactionRepository.save(transaction);
+
+
+        } else if ((specialAccount.getBalance() + specialAccount.getCreditSpecial()) >= value) {
+
+            specialAccount.setCreditSpecialUsed((specialAccount.getBalance() - value) * (-1));
+
+            Double newBalance =  (specialAccount.getCreditSpecialUsed() * (-1));
+
+            specialAccount.setBalance(newBalance);
+
+            Transaction transaction = new Transaction();
+            transaction.setAccount(specialAccount);
+            transaction.setOperation(WITHDRAW);
+            transaction.setValue(value);
+
+            transactionRepository.save(transaction);
+        }else {
+            throw new ResourceNotFoundException ("Saldo insuficiente para realizar a operação");
+        }
     }
 
     public void remove(Long id){

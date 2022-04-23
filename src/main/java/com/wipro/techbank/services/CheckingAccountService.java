@@ -3,10 +3,12 @@ package com.wipro.techbank.services;
 import com.wipro.techbank.domain.CheckingAccount;
 import com.wipro.techbank.domain.Client;
 import com.wipro.techbank.domain.CreditCard;
+import com.wipro.techbank.domain.Transaction;
 import com.wipro.techbank.dtos.*;
 import com.wipro.techbank.repositories.CheckingAccountRepository;
 import com.wipro.techbank.repositories.ClientRepository;
 import com.wipro.techbank.repositories.CreditCardRepository;
+import com.wipro.techbank.repositories.TransactionRepository;
 import com.wipro.techbank.services.exceptions.ResourceNotFoundException;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.internal.util.Assert;
@@ -23,6 +25,8 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static com.wipro.techbank.domain.Operation.WITHDRAW;
+
 
 @Service
 public class CheckingAccountService {
@@ -36,6 +40,9 @@ public class CheckingAccountService {
 
     @Autowired
     private ModelMapper modelMapper;
+
+    @Autowired
+    private TransactionRepository transactionRepository;
 
     public List<CheckingAccountResponseDto> findAll(){
         return checkingAccountRepository.findAll()
