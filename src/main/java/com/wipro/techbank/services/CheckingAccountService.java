@@ -109,12 +109,6 @@ public class CheckingAccountService {
         return modelMapper.map(checkingAccountRequestDto, CheckingAccount.class);
     }
 
-    private void copyDtoToEntityClient(CheckingAccountRequestDto dto, CheckingAccount entity) {
-        Client client = clientRepository.getById(dto.getClient().getId());
-        dto.setClient(new ClientDto(client));
-        entity.setClient(client);
-    }
-
     private void copyDtoToEntityCreditCard(CheckingAccountRequestDto dto, CheckingAccount entity) {
         try {
             CreditCard creditCard = creditCardRepository.getById(dto.getCreditCard().getId());
