@@ -9,12 +9,14 @@ import com.wipro.techbank.repositories.ClientRepository;
 import com.wipro.techbank.repositories.CreditCardRepository;
 import com.wipro.techbank.services.exceptions.ResourceNotFoundException;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.internal.util.Assert;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
+import javax.validation.constraints.AssertTrue;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -51,14 +53,9 @@ public class CheckingAccountService {
 
     @Transactional
     public CheckingAccountResponseDto create(CheckingAccountRequestDto checkingAccountRequestDto){
-        try {
-            CheckingAccount checkingAccount = toCheckingAccount(checkingAccountRequestDto);
-            checkingAccount = checkingAccountRepository.save(checkingAccount);
-            return modelMapper.map(checkingAccount, CheckingAccountResponseDto.class);
-        } catch (EntityNotFoundException e) {
-            throw new ResourceNotFoundException("É preciso informar um cliente e um cartão de crédito já cadastrado.");
-        }
-
+        CheckingAccount checkingAccount = toCheckingAccount(checkingAccountRequestDto);
+        checkingAccount = checkingAccountRepository.save(checkingAccount);
+        return modelMapper.map(checkingAccount, CheckingAccountResponseDto.class);
     }
 
     @Transactional
@@ -87,11 +84,28 @@ public class CheckingAccountService {
     }
 
     private CheckingAccount toCheckingAccount(CheckingAccountRequestDto checkingAccountRequestDto){
-        Client client = clientRepository.getById(checkingAccountRequestDto.getClient().getId());
-        checkingAccountRequestDto.setClient(new ClientDto(client));
+        if (checkingAccountRequestDto.getClient() == null) {
+            throw new ResourceNotFoundException("Cliente, cadastrado, precisa ser informado");
+        }
 
-        CreditCard creditCard = creditCardRepository.getById(checkingAccountRequestDto.getCreditCard().getId());
-        checkingAccountRequestDto.setCreditCard(new CreditCardResponseDto(creditCard));
+        try {
+            Client client = clientRepository.getById(checkingAccountRequestDto.getClient().getId());
+            checkingAccountRequestDto.setClient(new ClientDto(client));
+        } catch (EntityNotFoundException e){
+            throw new ResourceNotFoundException(String.format("Cliente com ID %d não foi encontrado.", checkingAccountRequestDto.getClient().getId()));
+        }
+
+        if (checkingAccountRequestDto.getCreditCard() == null) {
+            throw new ResourceNotFoundException("Cartão de Credito, cadastrado, precisa ser informado.");
+        }
+
+        try {
+            CreditCard creditCard = creditCardRepository.getById(checkingAccountRequestDto.getCreditCard().getId());
+            checkingAccountRequestDto.setCreditCard(new CreditCardResponseDto(creditCard));
+        }catch (EntityNotFoundException e){
+            throw new ResourceNotFoundException(String.format("Cartão de Credito com ID %d não foi encontrado.", checkingAccountRequestDto.getCreditCard().getId()));
+        }
+
         return modelMapper.map(checkingAccountRequestDto, CheckingAccount.class);
     }
 
