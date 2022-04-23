@@ -27,7 +27,7 @@ public class ResourceExceptionHandle {
     }
 
     @ExceptionHandler(DataBasesException.class)
-    public ResponseEntity<StandardError> entityNotFound(DataBasesException e, HttpServletRequest request) {
+    public ResponseEntity<StandardError> badRequest(DataBasesException e, HttpServletRequest request) {
         StandardError err = new StandardError();
         HttpStatus status = HttpStatus.BAD_REQUEST;
 

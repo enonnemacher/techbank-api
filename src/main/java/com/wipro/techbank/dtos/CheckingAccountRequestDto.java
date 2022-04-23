@@ -20,12 +20,6 @@ public class CheckingAccountRequestDto implements Serializable {
 
     private ClientDto client;
 
-    private CreditCard creditCard;
+    private CreditCardResponseDto creditCard;
 
-//    private List<TransactionResponseDto> operations = new ArrayList<>();
-//
-//    public CheckingAccountDto(CheckingAccount entity) {
-//        id = entity.getId();
-//        balance = entity.getBalance();
-//    }
 }
