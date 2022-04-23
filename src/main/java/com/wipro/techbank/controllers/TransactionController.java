@@ -1,6 +1,7 @@
 package com.wipro.techbank.controllers;
 
-import com.wipro.techbank.dtos.TransactionDto;
+import com.wipro.techbank.dtos.TransactionRequestDto;
+import com.wipro.techbank.dtos.TransactionResponseDto;
 import com.wipro.techbank.services.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -16,13 +17,19 @@ public class TransactionController {
     private TransactionService transactionService;
 
     @GetMapping
-    public ResponseEntity<Page<TransactionDto>> findAll(Pageable pageable) {
-        Page<TransactionDto> list = transactionService.findAllPaged(pageable);
+    public ResponseEntity<Page<TransactionResponseDto>> findAll(Pageable pageable) {
+        Page<TransactionResponseDto> list = transactionService.findAllPaged(pageable);
         return ResponseEntity.ok(list);
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<TransactionDto> findById(@PathVariable Long id) {
+    public ResponseEntity<TransactionResponseDto> findById(@PathVariable Long id) {
         return ResponseEntity.ok(transactionService.findById(id));
+    }
+
+    @PostMapping("/deposits/{id}")
+    public ResponseEntity<TransactionResponseDto> deposit(@PathVariable Long id, @RequestBody TransactionRequestDto dto){
+        TransactionResponseDto transactionResponseDto = transactionService.deposit(id, dto);
+        return ResponseEntity.ok().body(transactionResponseDto);
     }
 }
