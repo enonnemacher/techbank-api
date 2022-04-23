@@ -23,4 +23,8 @@ public abstract class Account  implements Serializable {
 
     private Double balance;
 
+    public void deposit(Double value) {
+        this.balance += value;
+    }
+
 }
