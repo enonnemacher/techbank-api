@@ -1,25 +1,23 @@
 package com.wipro.techbank.services;
 
-import com.wipro.techbank.domain.CheckingAccount;
-import com.wipro.techbank.domain.Client;
-import com.wipro.techbank.domain.CreditCard;
+import com.wipro.techbank.domain.*;
 import com.wipro.techbank.dtos.*;
 import com.wipro.techbank.repositories.CheckingAccountRepository;
 import com.wipro.techbank.repositories.ClientRepository;
 import com.wipro.techbank.repositories.CreditCardRepository;
+import com.wipro.techbank.repositories.TransactionRepository;
+import com.wipro.techbank.services.exceptions.DataBasesException;
 import com.wipro.techbank.services.exceptions.ResourceNotFoundException;
 import org.modelmapper.ModelMapper;
-import org.modelmapper.internal.util.Assert;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
-import javax.validation.constraints.AssertTrue;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -75,8 +73,14 @@ public class CheckingAccountService {
         }
     }
 
-    public void remove(Long id){
-        checkingAccountRepository.deleteById(id);
+    public void remove(Long id) {
+        try {
+            checkingAccountRepository.deleteById(id);
+        } catch (EmptyResultDataAccessException e) {
+            throw new ResourceNotFoundException("Id not found " + id);
+        } catch (DataIntegrityViolationException e) {
+            throw new DataBasesException("Integrity violation");
+        }
     }
 
     private CheckingAccountResponseDto toCheckingAccountDto(CheckingAccount checkingAccount){
