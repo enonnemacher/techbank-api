@@ -31,8 +31,6 @@ public class TransactionResponseDto implements Serializable {
     @NotNull(message = "O tipo da conta é obrigatório.")
     private AccountType accountType;
 
-    private Double balance;
-
     public TransactionResponseDto(Transaction entity) {
         id = entity.getId();
         date = entity.getCreatedAt();
@@ -41,8 +39,4 @@ public class TransactionResponseDto implements Serializable {
         accountType = entity.getAccountType();
     }
 
-    public TransactionResponseDto(Transaction entity, Double balance) {
-        this(entity);
-        this.balance = balance;
-    }
 }

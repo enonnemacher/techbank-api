@@ -2,6 +2,7 @@ package com.wipro.techbank.controllers;
 
 import com.wipro.techbank.dtos.TransactionRequestDto;
 import com.wipro.techbank.dtos.TransactionResponseDto;
+import com.wipro.techbank.dtos.TransactionResponseOperationDto;
 import com.wipro.techbank.services.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -28,8 +29,14 @@ public class TransactionController {
     }
 
     @PostMapping("/deposits/{id}")
-    public ResponseEntity<TransactionResponseDto> deposit(@PathVariable Long id, @RequestBody TransactionRequestDto dto){
-        TransactionResponseDto transactionResponseDto = transactionService.deposit(id, dto);
+    public ResponseEntity<TransactionResponseOperationDto> deposit(@PathVariable Long id, @RequestBody TransactionRequestDto dto){
+        TransactionResponseOperationDto transactionResponseDto = transactionService.deposit(id, dto);
+        return ResponseEntity.ok().body(transactionResponseDto);
+    }
+
+    @PostMapping("/withdrawals/{id}")
+    public ResponseEntity<TransactionResponseOperationDto> withdraw(@PathVariable Long id, @RequestBody TransactionRequestDto dto){
+        TransactionResponseOperationDto transactionResponseDto = transactionService.withdraw(id, dto);
         return ResponseEntity.ok().body(transactionResponseDto);
     }
 }

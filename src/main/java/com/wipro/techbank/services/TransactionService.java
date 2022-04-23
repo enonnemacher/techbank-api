@@ -4,6 +4,7 @@ package com.wipro.techbank.services;
 import com.wipro.techbank.domain.*;
 import com.wipro.techbank.dtos.TransactionRequestDto;
 import com.wipro.techbank.dtos.TransactionResponseDto;
+import com.wipro.techbank.dtos.TransactionResponseOperationDto;
 import com.wipro.techbank.repositories.CheckingAccountRepository;
 import com.wipro.techbank.repositories.SpecialAccountRepository;
 import com.wipro.techbank.repositories.TransactionRepository;
@@ -40,7 +41,8 @@ public class TransactionService {
         return new TransactionResponseDto(entity);
     }
 
-    public TransactionResponseDto deposit(Long accountId, TransactionRequestDto transactionDto) {
+    @Transactional
+    public TransactionResponseOperationDto deposit(Long accountId, TransactionRequestDto transactionDto) {
         Account account = null;
         Transaction transaction = new Transaction();
 
@@ -53,14 +55,36 @@ public class TransactionService {
             account.deposit(transactionDto.getValue());
             transaction.setAccount(account);
             transaction = transactionRepository.save(transaction);
-        }
-        if (transactionDto.getAccountType().equals(AccountType.ESPECIAL_ACCOUNT)) {
+        } else if (transactionDto.getAccountType().equals(AccountType.ESPECIAL_ACCOUNT)) {
             account = specialAccountRepository.getById(accountId);
             account.deposit(transactionDto.getValue());
             transaction.setAccount(account);
             transaction = transactionRepository.save(transaction);
         }
-        return new TransactionResponseDto(transaction, account.getBalance());
+        assert account != null;
+        return new TransactionResponseOperationDto(transaction, account.getBalance());
+    }
+
+    @Transactional
+    public TransactionResponseOperationDto withdraw(Long accountId, TransactionRequestDto dto) {
+        Account account = null;
+        Transaction transaction = new Transaction();
+
+        transaction.setOperation(Operation.WITHDRAW);
+        transaction.setValue(dto.getValue());
+        transaction.setAccountType(dto.getAccountType());
+
+        if (dto.getAccountType().equals(AccountType.CHECKING_ACCOUNT)) {
+            account = checkingAccountRepository.getById(accountId);
+
+            if(account.getBalance() < dto.getValue()) {
+                throw new ResourceNotFoundException("Saldo insuficiente.");
+            }
+            account.withdraw(dto.getValue());
+            transaction.setAccount(account);
+            transaction = transactionRepository.save(transaction);
+        }
+        return new TransactionResponseOperationDto(transaction, account.getBalance());
     }
 
     private void copyDtoToEntity(TransactionResponseDto dto, Transaction entity) {

@@ -18,9 +18,6 @@ import java.io.Serializable;
 public class TransactionRequestDto implements Serializable {
     private static final long serialVersionUID = 377217321776086460L;
 
-    @NotNull(message = "Descrição da operação obrigatória.")
-    private Operation operation;
-
     @NotNull(message = "Valor da operação é obrigatório.")
     private Double value;
 
@@ -29,7 +26,6 @@ public class TransactionRequestDto implements Serializable {
 
 
     public TransactionRequestDto(Transaction entity) {
-        operation = entity.getOperation();
         value = entity.getValue();
         accountType = entity.getAccountType();
     }
