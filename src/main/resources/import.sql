@@ -21,15 +21,27 @@ INSERT INTO tb_credit_card (card_number, expiration_date, used_limit, limit_cred
 INSERT INTO tb_credit_card (card_number, expiration_date, used_limit, limit_credit, security_code) VALUES("6585 4661 5298 7444", '2023-07-13', 0.0, 500.00, 852);
 INSERT INTO tb_credit_card (card_number, expiration_date, used_limit, limit_credit, security_code) VALUES("6585 4661 5298 7555", '2023-07-13', 0.0, 500.00, 836);
 
-INSERT INTO tb_checking_account (id, balance, client_id, credit_card_id) VALUES(1, 1700.00, 1, 1);
-INSERT INTO tb_checking_account (id, balance, client_id, credit_card_id) VALUES(3, 1700.00, 2, 2);
-INSERT INTO tb_checking_account (id, balance, client_id, credit_card_id) VALUES(5, 1700.00, 3, 3);
-INSERT INTO tb_checking_account (id, balance, client_id, credit_card_id) VALUES(7, 1700.00, 4, 4);
-INSERT INTO tb_checking_account (id, balance, client_id, credit_card_id) VALUES(8, 1700.00, 5, 5);
 
-INSERT INTO tb_special_account (id, balance, credit_special, credit_special_used, client_id, credit_card_id) VALUES(2, 1700.00, 800.0, 0.0, 6, 6);
-INSERT INTO tb_special_account (id, balance, credit_special, credit_special_used, client_id, credit_card_id) VALUES(4, 1700.00, 800.0, 0.0, 7, 7);
-INSERT INTO tb_special_account (id, balance, credit_special, credit_special_used, client_id, credit_card_id) VALUES(6, 1700.00, 800.0, 0.0, 8, 8);
+INSERT INTO tb_account (balance) VALUES(1700.00);
+INSERT INTO tb_account (balance) VALUES(1700.00);
+INSERT INTO tb_account (balance) VALUES(1700.00);
+INSERT INTO tb_account (balance) VALUES(1700.00);
+INSERT INTO tb_account (balance) VALUES(1700.00);
+INSERT INTO tb_account (balance) VALUES(1700.00);
+INSERT INTO tb_account (balance) VALUES(1700.00);
+INSERT INTO tb_account (balance) VALUES(1700.00);
+
+
+INSERT INTO tb_checking_account (id, client_id, credit_card_id) VALUES(1, 1, 1);
+INSERT INTO tb_checking_account (id, client_id, credit_card_id) VALUES(2, 2, 2);
+INSERT INTO tb_checking_account (id, client_id, credit_card_id) VALUES(3, 3, 3);
+INSERT INTO tb_checking_account (id, client_id, credit_card_id) VALUES(4, 4, 4);
+INSERT INTO tb_checking_account (id, client_id, credit_card_id) VALUES(5, 5, 5);
+
+INSERT INTO tb_special_account (id, credit_special, credit_special_used, client_id, credit_card_id) VALUES(6, 800.0, 0.0, 6, 6);
+INSERT INTO tb_special_account (id, credit_special, credit_special_used, client_id, credit_card_id) VALUES(7, 800.0, 0.0, 7, 7);
+INSERT INTO tb_special_account (id, credit_special, credit_special_used, client_id, credit_card_id) VALUES(8, 800.0, 0.0, 8, 8);
+
 
 INSERT INTO tb_transaction (created_at, operation, value, account_id) VALUES(now(), 0, 150.0, 1);
 INSERT INTO tb_transaction (created_at, operation, value, account_id) VALUES(now(), 0, 150.0, 2);

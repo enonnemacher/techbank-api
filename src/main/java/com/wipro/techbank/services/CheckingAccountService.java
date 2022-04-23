@@ -10,6 +10,8 @@ import com.wipro.techbank.repositories.CreditCardRepository;
 import com.wipro.techbank.repositories.TransactionRepository;
 import com.wipro.techbank.services.exceptions.DataBasesException;
 import com.wipro.techbank.services.exceptions.ResourceNotFoundException;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -18,74 +20,65 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
 
 @Service
 public class CheckingAccountService {
 
     @Autowired
     private CheckingAccountRepository checkingAccountRepository;
-
     @Autowired
     private ClientRepository clientRepository;
 
     @Autowired
-    private CreditCardRepository creditCardRepository;
+    private ModelMapper modelMapper;
 
-    @Autowired
-    private TransactionRepository transactionRepository;
-
-    public CheckingAccountDto create(CheckingAccountDto dto) {
-        CheckingAccount entity = new CheckingAccount();
-        copyDtoToEntity(dto, entity);
-        entity = checkingAccountRepository.save(entity);
-        return new CheckingAccountDto(entity);
+    public List<CheckingAccountResponseDto> findAll(){
+        return checkingAccountRepository.findAll()
+                .stream()
+                .map(this::toCheckingAccountDto)
+                .collect(Collectors.toList());
     }
 
-    public Page<CheckingAccountDto> findAllPaged(Pageable pageable) {
-        Page<CheckingAccount> creditCards = checkingAccountRepository.findAll(pageable);
-        return creditCards.map(CheckingAccountDto::new);
-    }
-
-    @Transactional(readOnly = true)
-    public CheckingAccountDto findById(Long id) {
+    public CheckingAccountResponseDto findById(Long id){
         Optional<CheckingAccount> optionalCheckingAccount = checkingAccountRepository.findById(id);
-        CheckingAccount entity = optionalCheckingAccount.orElseThrow(() -> new ResourceNotFoundException("Entidade não econtrada."));
-        return new CheckingAccountDto(entity);
+        CheckingAccount checkingAccountDb = optionalCheckingAccount.orElseThrow(()->
+                new ResourceNotFoundException("Entidade não encontrada"));
+        return toCheckingAccountDto(checkingAccountDb);
     }
 
-    public void delete(Long id) {
-        try {
-            checkingAccountRepository.deleteById(id);
-        } catch (EmptyResultDataAccessException e) {
-            throw new ResourceNotFoundException("Id " + id + " não encontrado.");
-        } catch (DataIntegrityViolationException e) {
-            throw new DataBasesException("Violação de integridade.");
+    public void create(CheckingAccountRequestDto checkingAccountRequestDto){
+        Long idClient = checkingAccountRequestDto.getClient().getId();
+        Optional<Client> client = clientRepository.findById(idClient);
+        if(!client.isPresent()){
+            throw new ResourceNotFoundException("Entidade não encontrada");
         }
+        CheckingAccount checkingAccount = toCheckingAccount(checkingAccountRequestDto);
+        checkingAccountRepository.save(checkingAccount);
     }
 
-    private void copyDtoToEntity(CheckingAccountDto dto, CheckingAccount entity) {
-        entity.setBalance(dto.getBalance());
-        Client client = new Client();
-        client.setCpf(dto.getClient().getCpf());
-        copyClientDtoToClientEntity(entity.getClient(), dto.getClient());
+    public CheckingAccountResponseDto updateCheckingAccount(Long id, CheckingAccountRequestDto checkingAccountRequestDto){
+        Optional<CheckingAccount> optionalCheckingAccount = checkingAccountRepository.findById(id);
+        CheckingAccount checkingAccountDb = optionalCheckingAccount.orElseThrow(()->
+                new ResourceNotFoundException("Entidade não encontrada"));
 
-        // TODO: falta setar o cartão de credito
-
-        entity.getTransactions().clear();
-        for (TransactionResponseDto transactionResponseDto : dto.getOperations()) {
-            Transaction transaction = transactionRepository.getById(transactionResponseDto.getId());
-            entity.getTransactions().add(transaction);
-        }
+        BeanUtils.copyProperties(checkingAccountRequestDto,checkingAccountDb);
+        checkingAccountRepository.save(checkingAccountDb);
+        return toCheckingAccountDto(checkingAccountDb);
     }
 
-    // TODO: pensar uma melhor forma de criar o método
-    private void copyClientDtoToClientEntity(Client entity, ClientDto dto) {
-        entity.setId(dto.getId());
-        entity.setCpf(dto.getCpf());
-        entity.setEmail(dto.getEmail());
-        entity.setName(dto.getName());
-        entity.setPhoneNumber(dto.getPhoneNumber());
+    public void remove(Long id){
+        checkingAccountRepository.deleteById(id);
     }
 
+    private CheckingAccountResponseDto toCheckingAccountDto(CheckingAccount checkingAccount){
+        return modelMapper.map(checkingAccount, CheckingAccountResponseDto.class);
+    }
+
+    private CheckingAccount toCheckingAccount(CheckingAccountRequestDto checkingAccountRequestDto){
+        return modelMapper.map(checkingAccountRequestDto, CheckingAccount.class);
+    }
 }
