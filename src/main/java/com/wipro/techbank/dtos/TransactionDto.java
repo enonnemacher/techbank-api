@@ -1,5 +1,6 @@
 package com.wipro.techbank.dtos;
 
+import com.wipro.techbank.domain.Account;
 import com.wipro.techbank.domain.Operation;
 import com.wipro.techbank.domain.Transaction;
 import lombok.*;
@@ -14,7 +15,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @ToString
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class TransactionResponseDto implements Serializable {
+public class TransactionDto implements Serializable {
     private static final long serialVersionUID = 377217321776086460L;
 
     private Long id;
@@ -26,10 +27,14 @@ public class TransactionResponseDto implements Serializable {
     @NotNull(message = "Valor da operação é obrigatório.")
     private Double value;
 
-    public TransactionResponseDto(Transaction entity) {
+    @NotNull(message = "Uma conta precisa ser informada.")
+    private Account account;
+
+    public TransactionDto(Transaction entity) {
         id = entity.getId();
         date = entity.getCreatedAt();
         operation = entity.getOperation();
         value = entity.getValue();
+        account = entity.getAccount();
     }
 }
