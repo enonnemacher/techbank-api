@@ -126,7 +126,7 @@ class CreditCardServiceTest {
     }
 
     @Test
-    void deleteShouldDoNothingWhenIdExists() {
+    void deleteShouldReturnNothingWhenIdExists() {
         Assertions.assertDoesNotThrow(() -> {
             creditCardService.delete(existsId);
         });

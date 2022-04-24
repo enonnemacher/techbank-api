@@ -19,5 +19,5 @@ public interface TestsServicesInterface {
 
     void deleteShouldThrowResourceNotFoundExceptionWhenIdDoesNotExists();
 
-    void deleteShouldDoNothingWhenIdExists();
+    void deleteShouldReturnNothingWhenIdExists();
 }

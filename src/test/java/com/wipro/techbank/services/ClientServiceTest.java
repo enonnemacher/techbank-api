@@ -138,8 +138,12 @@ class ClientServiceTest extends TestsServiceAbstract{
         verify(clientRepository, times(1)).deleteById(getNonExistsId());
     }
 
+    @Test
     @Override
-    public void deleteShouldDoNothingWhenIdExists() {
-
+    public void deleteShouldReturnNothingWhenIdExists() {
+        Assertions.assertDoesNotThrow(() -> {
+            clientService.remove(getExistsId());
+        });
+        verify(clientRepository, times(1)).deleteById(getExistsId());
     }
 }
