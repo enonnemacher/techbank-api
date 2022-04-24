@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import springfox.documentation.annotations.ApiIgnore;
 
 import java.net.URI;
 
@@ -30,7 +31,7 @@ public class ClientController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<ClientDto>> findAll(Pageable pageable) {
+    public ResponseEntity<Page<ClientDto>> findAll(@ApiIgnore Pageable pageable) {
         Page<ClientDto> clientList = clientService.findAll(pageable);
         return ResponseEntity.ok(clientList);
     }
