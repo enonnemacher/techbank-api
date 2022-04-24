@@ -90,6 +90,7 @@ class ClientServiceTest extends TestsServiceAbstract{
             clientService.findById(getNonExistsId());
         });
 
+        // Assert
         verify(clientRepository, times(1)).findById(getNonExistsId());
     }
 
