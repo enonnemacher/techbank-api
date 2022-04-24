@@ -2,6 +2,7 @@ package com.wipro.techbank.services;
 
 import com.wipro.techbank.domain.Client;
 import com.wipro.techbank.dtos.ClientDto;
+import com.wipro.techbank.dtos.CreditCardResponseDto;
 import com.wipro.techbank.repositories.ClientRepository;
 import com.wipro.techbank.services.exceptions.DataBasesException;
 import com.wipro.techbank.services.exceptions.ResourceNotFoundException;
@@ -38,6 +39,7 @@ class ClientServiceTest extends TestsServiceAbstract{
 
     private Client entity;
     private PageImpl<Client> page;
+    ClientDto clientDto;
 
     @BeforeEach
     @Override
@@ -45,6 +47,8 @@ class ClientServiceTest extends TestsServiceAbstract{
         super.setUp();
         entity = Factory.createClient();
         page = new PageImpl<>(List.of(entity));
+
+        clientDto = Factory.createClientDto();
 
         Mockito.when(clientRepository.save(entity)).thenReturn(entity);
 
@@ -94,11 +98,25 @@ class ClientServiceTest extends TestsServiceAbstract{
         verify(clientRepository, times(1)).findById(getNonExistsId());
     }
 
+    @Test
     @Override
     public void createShouldReturnCreditCardResponseDto() {
+        // Act
+        ClientDto result = clientService.save(clientDto);
+        String expectedCpf = "756.394.430-30";
+        String expectedName = "Fulano Beltrano dos Testes";
+        String expectedPhoneNumber = "(10) 91998-9673";
+        String expectedEmail = "fulano.beltrano.testes@techbank.com";
 
+        // Assert
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(result.getCpf(), expectedCpf);
+        Assertions.assertEquals(result.getName(), expectedName);
+        Assertions.assertEquals(result.getPhoneNumber(), expectedPhoneNumber);
+        Assertions.assertEquals(result.getEmail(), expectedEmail);
     }
 
+    @Test
     @Override
     public void deleteShouldThrowDataBasesExceptionWhenIdIsDependent() {
 
