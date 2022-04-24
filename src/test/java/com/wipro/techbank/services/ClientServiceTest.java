@@ -2,7 +2,6 @@ package com.wipro.techbank.services;
 
 import com.wipro.techbank.domain.Client;
 import com.wipro.techbank.dtos.ClientDto;
-import com.wipro.techbank.dtos.CreditCardResponseDto;
 import com.wipro.techbank.repositories.ClientRepository;
 import com.wipro.techbank.services.exceptions.DataBasesException;
 import com.wipro.techbank.services.exceptions.ResourceNotFoundException;

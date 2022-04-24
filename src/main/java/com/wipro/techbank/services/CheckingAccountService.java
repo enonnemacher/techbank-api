@@ -5,7 +5,6 @@ import com.wipro.techbank.dtos.*;
 import com.wipro.techbank.repositories.CheckingAccountRepository;
 import com.wipro.techbank.repositories.ClientRepository;
 import com.wipro.techbank.repositories.CreditCardRepository;
-import com.wipro.techbank.repositories.TransactionRepository;
 import com.wipro.techbank.services.exceptions.DataBasesException;
 import com.wipro.techbank.services.exceptions.ResourceNotFoundException;
 import org.modelmapper.ModelMapper;
