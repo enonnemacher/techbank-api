@@ -22,4 +22,10 @@ public class CheckingAccount extends Account  implements Serializable {
     @OneToOne
     @JoinColumn(nullable = false)
     private CreditCard creditCard;
+
+    public CheckingAccount(Double balance, Client client, CreditCard creditCard) {
+        super.setBalance(balance);
+        this.client = client;
+        this.creditCard = creditCard;
+    }
 }
