@@ -36,10 +36,7 @@ class CreditCardServiceTest {
     @Mock
     private CreditCardRepository creditCardRepository;
 
-    private CreditCardResponseDto responseDto;
-
     private CreditCardRequestDto requestDto;
-
     private CreditCard entity;
     private PageImpl<CreditCard> page;
     private Long existsId;
@@ -51,12 +48,10 @@ class CreditCardServiceTest {
         existsId = 1L;
         nonExistsId = 2L;
         dependentId = 3L;
-        responseDto = Factory.createCreditCardDto();
         requestDto = Factory.createCreditCardRequestDto();
         entity = Factory.createCreditCard();
         page = new PageImpl<>(List.of(entity));
 
-        System.out.println("ENTITY: " + entity);
         Mockito.when(creditCardRepository.save(entity)).thenReturn(entity);
 
         Mockito.when(creditCardRepository.findAll((Pageable) ArgumentMatchers.any())).thenReturn(page);
