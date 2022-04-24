@@ -40,6 +40,10 @@ class ClientServiceTest extends TestsServiceAbstract{
     private Client entity;
     private PageImpl<Client> page;
     ClientDto clientDto;
+    private final String expectedCpf = "756.394.430-30";
+    private final String expectedName = "Fulano Beltrano dos Testes";
+    private final String expectedPhoneNumber = "(10) 91998-9673";
+    private final String expectedEmail = "fulano.beltrano.testes@techbank.com";
 
     @BeforeEach
     @Override
@@ -84,6 +88,10 @@ class ClientServiceTest extends TestsServiceAbstract{
         // Assert
         Assertions.assertNotNull(result);
         verify(clientRepository, times(1)).findById(getExistsId());
+        Assertions.assertEquals(result.getCpf(), expectedCpf);
+        Assertions.assertEquals(result.getName(), expectedName);
+        Assertions.assertEquals(result.getPhoneNumber(), expectedPhoneNumber);
+        Assertions.assertEquals(result.getEmail(), expectedEmail);
     }
 
     @Test
@@ -103,10 +111,6 @@ class ClientServiceTest extends TestsServiceAbstract{
     public void createShouldReturnCreditCardResponseDto() {
         // Act
         ClientDto result = clientService.save(clientDto);
-        String expectedCpf = "756.394.430-30";
-        String expectedName = "Fulano Beltrano dos Testes";
-        String expectedPhoneNumber = "(10) 91998-9673";
-        String expectedEmail = "fulano.beltrano.testes@techbank.com";
 
         // Assert
         Assertions.assertNotNull(result);
