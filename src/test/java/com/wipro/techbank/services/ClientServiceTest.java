@@ -123,7 +123,10 @@ class ClientServiceTest extends TestsServiceAbstract{
     @Test
     @Override
     public void deleteShouldThrowDataBasesExceptionWhenIdIsDependent() {
-
+        Assertions.assertThrows(DataBasesException.class, () -> {
+            clientService.remove(getDependentId());
+        });
+        verify(clientRepository, times(1)).deleteById(getDependentId());
     }
 
     @Override
