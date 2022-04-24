@@ -129,9 +129,13 @@ class ClientServiceTest extends TestsServiceAbstract{
         verify(clientRepository, times(1)).deleteById(getDependentId());
     }
 
+    @Test
     @Override
     public void deleteShouldThrowResourceNotFoundExceptionWhenIdDoesNotExists() {
-
+        Assertions.assertThrows(ResourceNotFoundException.class, () -> {
+            clientService.remove(getNonExistsId());
+        });
+        verify(clientRepository, times(1)).deleteById(getNonExistsId());
     }
 
     @Override
