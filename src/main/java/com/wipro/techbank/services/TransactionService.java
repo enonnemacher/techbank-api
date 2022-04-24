@@ -84,6 +84,12 @@ public class TransactionService {
             transaction.setAccount(account);
             transaction = transactionRepository.save(transaction);
         }
+        else{
+            account = specialAccountRepository.findById(accountId).get();
+            account.withdraw(dto.getValue());
+            transaction.setAccount(account);
+            transaction = transactionRepository.save(transaction);
+        }
         return new TransactionResponseOperationDto(transaction, account.getBalance());
     }
 

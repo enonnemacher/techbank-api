@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 @RestController
 @RequestMapping("/transactions")
@@ -18,7 +19,7 @@ public class TransactionController {
     private TransactionService transactionService;
 
     @GetMapping
-    public ResponseEntity<Page<TransactionResponseDto>> findAll(Pageable pageable) {
+    public ResponseEntity<Page<TransactionResponseDto>> findAll(@ApiIgnore Pageable pageable) {
         Page<TransactionResponseDto> list = transactionService.findAllPaged(pageable);
         return ResponseEntity.ok(list);
     }

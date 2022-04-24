@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import springfox.documentation.annotations.ApiIgnore;
 
 import java.net.URI;
 
@@ -28,7 +29,7 @@ public class CreditCardControllers {
     }
 
     @GetMapping
-    public ResponseEntity<Page<CreditCardResponseDto>> findAll(Pageable pageable) {
+    public ResponseEntity<Page<CreditCardResponseDto>> findAll(@ApiIgnore Pageable pageable) {
         Page<CreditCardResponseDto> list = creditCardService.findAllPaged(pageable);
         return ResponseEntity.ok(list);
     }
