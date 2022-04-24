@@ -32,4 +32,11 @@ public class Client implements Serializable {
 
     @Column(nullable = false)
     private String email;
+
+    public Client(String name, String cpf, String phoneNumber, String email) {
+        this.name = name;
+        this.cpf = cpf;
+        this.phoneNumber = phoneNumber;
+        this.email = email;
+    }
 }
