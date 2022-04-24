@@ -82,9 +82,15 @@ class ClientServiceTest extends TestsServiceAbstract{
         verify(clientRepository, times(1)).findById(getExistsId());
     }
 
+    @Test
     @Override
     public void findByIdShouldThrowResourceNotFoundExceptionWhenIdDoesNotExixts() {
+        // Assert
+        Assertions.assertThrows(ResourceNotFoundException.class, () -> {
+            clientService.findById(getNonExistsId());
+        });
 
+        verify(clientRepository, times(1)).findById(getNonExistsId());
     }
 
     @Override
