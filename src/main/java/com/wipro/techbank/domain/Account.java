@@ -27,4 +27,8 @@ public abstract class Account  implements Serializable {
         this.balance += value;
     }
 
+    public void withdraw(Double value){
+        this.balance -= value;
+    }
+
 }
