@@ -1,6 +1,7 @@
 package com.wipro.techbank.tests;
 
 
+import com.wipro.techbank.domain.Client;
 import com.wipro.techbank.domain.CreditCard;
 import com.wipro.techbank.dtos.CreditCardRequestDto;
 import com.wipro.techbank.dtos.CreditCardResponseDto;
@@ -21,4 +22,7 @@ public class Factory {
         return new CreditCardRequestDto(entity);
     }
 
+    public static Client createClient() {
+        return new Client("Fulano Beltrano", "123.456.789-00", "(10) 91998-9673", "emailteste2022@teste.com");
+    }
 }
