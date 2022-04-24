@@ -39,10 +39,10 @@ class ClientServiceTest extends TestsServiceAbstract{
     private Client entity;
     private PageImpl<Client> page;
 
-
     @BeforeEach
     @Override
     public void setUp() {
+        super.setUp();
         entity = Factory.createClient();
         page = new PageImpl<>(List.of(entity));
 
@@ -50,12 +50,12 @@ class ClientServiceTest extends TestsServiceAbstract{
 
         Mockito.when(clientRepository.findAll((Pageable) ArgumentMatchers.any())).thenReturn(page);
 
-        Mockito.when(clientRepository.findById(super.getExistsId())).thenReturn(Optional.of(entity));
-        Mockito.when(clientRepository.findById(super.getNonExistsId())).thenThrow(ResourceNotFoundException.class);
+        Mockito.when(clientRepository.findById(getExistsId())).thenReturn(Optional.of(entity));
+        Mockito.when(clientRepository.findById(getNonExistsId())).thenThrow(ResourceNotFoundException.class);
 
-        doNothing().when(clientRepository).deleteById(super.getExistsId());
-        doThrow(ResourceNotFoundException.class).when(clientRepository).deleteById(super.getNonExistsId());
-        doThrow(DataBasesException.class).when(clientRepository).deleteById(super.getDependentId());
+        doNothing().when(clientRepository).deleteById(getExistsId());
+        doThrow(ResourceNotFoundException.class).when(clientRepository).deleteById(getNonExistsId());
+        doThrow(DataBasesException.class).when(clientRepository).deleteById(getDependentId());
     }
 
     @Test
@@ -72,9 +72,14 @@ class ClientServiceTest extends TestsServiceAbstract{
         verify(clientRepository, times(1)).findAll(pageable);
     }
 
+    @Test
     @Override
     public void findByIdShouldReturnCreditCardResponseDtoWhenIdExixts() {
+        ClientDto result = clientService.findById(getExistsId());
 
+        // Assert
+        Assertions.assertNotNull(result);
+        verify(clientRepository, times(1)).findById(getExistsId());
     }
 
     @Override
