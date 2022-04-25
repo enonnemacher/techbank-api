@@ -4,10 +4,7 @@ package com.wipro.techbank.tests;
 import com.wipro.techbank.domain.CheckingAccount;
 import com.wipro.techbank.domain.Client;
 import com.wipro.techbank.domain.CreditCard;
-import com.wipro.techbank.dtos.CheckingAccountResponseDto;
-import com.wipro.techbank.dtos.ClientDto;
-import com.wipro.techbank.dtos.CreditCardRequestDto;
-import com.wipro.techbank.dtos.CreditCardResponseDto;
+import com.wipro.techbank.dtos.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -46,7 +43,6 @@ public class Factory {
 
     public static Client createClient() {
         Client client = new Client("Fulano Beltrano dos Testes", "756.394.430-30", "(10) 91998-9673", "fulano.beltrano.testes@techbank.com");
-        client.setId(1L);
         return client;
     }
 
@@ -87,5 +83,16 @@ public class Factory {
         checkingAccountResponseDto.setCreditCardLimitCredit(entity.getCreditCard().getLimitCredit());
 
         return checkingAccountResponseDto;
+    }
+
+    public static CheckingAccountRequestDto createCheckingAccountRequestDto() {
+
+        CheckingAccountRequestDto checkingAccountRequestDto = new CheckingAccountRequestDto();
+        checkingAccountRequestDto.setId(1L);
+//        checkingAccountRequestDto.setClient(createClientDto());
+//        checkingAccountRequestDto.getClient().setId(1L);
+//        checkingAccountRequestDto.setCreditCard(createCreditCardDto());
+//        checkingAccountRequestDto.setBalance(1500.00);
+        return checkingAccountRequestDto;
     }
 }

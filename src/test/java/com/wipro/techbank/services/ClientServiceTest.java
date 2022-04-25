@@ -114,10 +114,10 @@ class ClientServiceTest extends TestsServiceAbstract{
 
         // Assert
         Assertions.assertNotNull(result);
-//        Assertions.assertEquals(result.getCpf(), expectedCpf);
-//        Assertions.assertEquals(result.getName(), expectedName);
-//        Assertions.assertEquals(result.getPhoneNumber(), expectedPhoneNumber);
-//        Assertions.assertEquals(result.getEmail(), expectedEmail);
+        Assertions.assertEquals(result.getCpf(), expectedCpf);
+        Assertions.assertEquals(result.getName(), expectedName);
+        Assertions.assertEquals(result.getPhoneNumber(), expectedPhoneNumber);
+        Assertions.assertEquals(result.getEmail(), expectedEmail);
     }
 
     @Test
