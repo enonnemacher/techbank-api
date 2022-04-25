@@ -69,14 +69,14 @@ class CheckingAccountServiceTest extends TestsServiceAbstract{
     @Test
     @Override
     public void findAllShouldReturnPage() {
-//        int expectedLength = 5;
-//        // Act
-//        List<CheckingAccountResponseDto> result = checkingAccountService.findAll();
-//
-//        // Assert
-//        Assertions.assertNotNull(result);
-//        Assertions.assertEquals(result.size(), 0);
-//        verify(checkingAccountRepository, times(1)).findAll();
+        int expectedLength = 1;
+        // Act
+        List<CheckingAccountResponseDto> result = checkingAccountService.findAll();
+
+        // Assert
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(result.size(), expectedLength);
+        verify(checkingAccountRepository, times(1)).findAll();
     }
 
     @Test

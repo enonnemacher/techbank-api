@@ -45,7 +45,9 @@ public class Factory {
     }
 
     public static Client createClient() {
-        return new Client(1L,"Fulano Beltrano dos Testes", "756.394.430-30", "(10) 91998-9673", "fulano.beltrano.testes@techbank.com");
+        Client client = new Client("Fulano Beltrano dos Testes", "756.394.430-30", "(10) 91998-9673", "fulano.beltrano.testes@techbank.com");
+        client.setId(1L);
+        return client;
     }
 
     public static List<Client> createClientList() {
@@ -65,8 +67,13 @@ public class Factory {
     public static CheckingAccount createCheckingAccount() {
         Client client = createClient();
         CreditCard creditCard = createCreditCard();
-        CheckingAccount checkingAccount = new CheckingAccount(1500.00, client, creditCard);
-        return checkingAccount;
+        return new CheckingAccount(1500.00, client, creditCard);
+    }
+
+    public static List<CheckingAccount> creteCheckingAccountList() {
+        List<Client> clients = createClientList();
+
+        return null;
     }
 
     public static CheckingAccountResponseDto createCheckingAccountDto() {

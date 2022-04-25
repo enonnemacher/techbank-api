@@ -98,7 +98,6 @@ class CreditCardServiceTest {
         verify(creditCardRepository, times(1)).findById(nonExistsId);
     }
 
-
     @Test
     void createShouldReturnCreditCardResponseDto() {
 
