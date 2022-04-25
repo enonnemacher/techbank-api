@@ -9,10 +9,29 @@ import com.wipro.techbank.dtos.ClientDto;
 import com.wipro.techbank.dtos.CreditCardRequestDto;
 import com.wipro.techbank.dtos.CreditCardResponseDto;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
 public class Factory {
 
     public static CreditCard createCreditCard() {
-        return new CreditCard(1L, 600.00);
+        CreditCard creditCard = new CreditCard(500.00);
+        creditCard.setId(1L);
+        creditCard.setCardNumber("4527 0144 9327 6163");
+        creditCard.setExpirationDate(LocalDateTime.of(2023, 07, 13, 0, 0));
+        creditCard.setUsedLimit(0.0);
+        creditCard.setSecurityCode((short) 456);
+        return creditCard;
+    }
+
+    public static List<CreditCard> createCreditCardList() {
+        List<CreditCard> list = new ArrayList<>();
+        for(int index = 1; index <= 10; index++) {
+            CreditCard creditCard = new CreditCard(500.00);
+            list.add(creditCard);
+        }
+        return list;
     }
 
     public static CreditCardResponseDto createCreditCardDto() {
@@ -26,7 +45,16 @@ public class Factory {
     }
 
     public static Client createClient() {
-        return new Client("Fulano Beltrano dos Testes", "756.394.430-30", "(10) 91998-9673", "fulano.beltrano.testes@techbank.com");
+        return new Client(1L,"Fulano Beltrano dos Testes", "756.394.430-30", "(10) 91998-9673", "fulano.beltrano.testes@techbank.com");
+    }
+
+    public static List<Client> createClientList() {
+        List<Client> list = new ArrayList<>();
+        for(int index = 1; index <= 10; index++) {
+            Client client = new Client("Fulano Beltrano dos Teste"+index, "756.394.430-3"+(index-1), "(10) 91998-967"+(index-1), String.format("fulano.beltrano.testes%d@techbank.com", index));
+            list.add(client);
+        }
+        return list;
     }
 
     public static ClientDto createClientDto() {
@@ -37,8 +65,8 @@ public class Factory {
     public static CheckingAccount createCheckingAccount() {
         Client client = createClient();
         CreditCard creditCard = createCreditCard();
-
-        return new CheckingAccount(1500.00, client, creditCard);
+        CheckingAccount checkingAccount = new CheckingAccount(1500.00, client, creditCard);
+        return checkingAccount;
     }
 
     public static CheckingAccountResponseDto createCheckingAccountDto() {

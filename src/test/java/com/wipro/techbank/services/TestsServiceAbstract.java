@@ -9,6 +9,8 @@ public abstract class TestsServiceAbstract implements TestsServicesInterface{
     private Long nonExistsId;
     private Long dependentId;
 
+    private final Integer sizeLists = 10;
+
     @Override
     public void setUp() {
         existsId = 1L;

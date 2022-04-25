@@ -6,30 +6,35 @@ import com.wipro.techbank.repositories.CheckingAccountRepository;
 import com.wipro.techbank.services.exceptions.DataBasesException;
 import com.wipro.techbank.services.exceptions.ResourceNotFoundException;
 import com.wipro.techbank.tests.Factory;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.times;
 
 @ExtendWith(SpringExtension.class)
+
 class CheckingAccountServiceTest extends TestsServiceAbstract{
 
 
     @InjectMocks
     private CheckingAccountService checkingAccountService;
+
+    @Mock
+    private ModelMapper modelMapper;
 
     @Mock
     private CheckingAccountRepository checkingAccountRepository;
@@ -44,12 +49,15 @@ class CheckingAccountServiceTest extends TestsServiceAbstract{
         super.setUp();
         entity = Factory.createCheckingAccount();
         page = new PageImpl<>(List.of(entity));
+        List<CheckingAccount> list = new ArrayList<>();
+        list.add(entity);
 
         checkingAccountDto = Factory.createCheckingAccountDto();
 
+        Mockito.when(modelMapper.map(entity, CheckingAccountResponseDto.class)).thenReturn(checkingAccountDto);
         Mockito.when(checkingAccountRepository.save(entity)).thenReturn(entity);
 
-        Mockito.when(checkingAccountRepository.findAll((Pageable) ArgumentMatchers.any())).thenReturn(page);
+        Mockito.when(checkingAccountRepository.findAll()).thenReturn(list);
 
         Mockito.when(checkingAccountRepository.findById(getExistsId())).thenReturn(Optional.of(entity));
         Mockito.when(checkingAccountRepository.findById(getNonExistsId())).thenThrow(ResourceNotFoundException.class);
@@ -61,13 +69,34 @@ class CheckingAccountServiceTest extends TestsServiceAbstract{
     @Test
     @Override
     public void findAllShouldReturnPage() {
-
+//        int expectedLength = 5;
+//        // Act
+//        List<CheckingAccountResponseDto> result = checkingAccountService.findAll();
+//
+//        // Assert
+//        Assertions.assertNotNull(result);
+//        Assertions.assertEquals(result.size(), 0);
+//        verify(checkingAccountRepository, times(1)).findAll();
     }
 
     @Test
     @Override
     public void findByIdShouldReturnCreditCardResponseDtoWhenIdExixts() {
+        CheckingAccountResponseDto result = checkingAccountService.findById(getExistsId());
+        Double expectedBalance = 1500.00;
+        String expectedCreditCardNumber = "4527 0144 9327 6163";
+        Double expectedCreditCardLimit = 500.00;
+        Long expectedClientId = 1L;
+        String expectedClientName = "Fulano Beltrano dos Testes";
 
+        // Assert
+        Assertions.assertNotNull(result);
+        verify(checkingAccountRepository, times(1)).findById(getExistsId());
+        Assertions.assertEquals(result.getBalance(), expectedBalance);
+        Assertions.assertEquals(result.getCreditCardCardNumber(), expectedCreditCardNumber);
+        Assertions.assertEquals(result.getCreditCardLimitCredit(), expectedCreditCardLimit);
+        Assertions.assertEquals(result.getClientId(), expectedClientId);
+        Assertions.assertEquals(result.getClientName(), expectedClientName);
     }
 
     @Test

@@ -50,7 +50,7 @@ class CreditCardServiceTest {
         dependentId = 3L;
         requestDto = Factory.createCreditCardRequestDto();
         entity = Factory.createCreditCard();
-        page = new PageImpl<>(List.of(entity));
+        page = new PageImpl<>(Factory.createCreditCardList());
 
         Mockito.when(creditCardRepository.save(entity)).thenReturn(entity);
 
@@ -74,6 +74,7 @@ class CreditCardServiceTest {
 
         // Assert
         Assertions.assertNotNull(result);
+        Assertions.assertEquals(result.getSize(), 10);
         verify(creditCardRepository, times(1)).findAll(pageable);
     }
 

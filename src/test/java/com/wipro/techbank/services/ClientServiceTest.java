@@ -49,7 +49,8 @@ class ClientServiceTest extends TestsServiceAbstract{
     public void setUp() {
         super.setUp();
         entity = Factory.createClient();
-        page = new PageImpl<>(List.of(entity));
+
+        page = new PageImpl<>(Factory.createClientList());
 
         clientDto = Factory.createClientDto();
 
@@ -76,6 +77,7 @@ class ClientServiceTest extends TestsServiceAbstract{
 
         // Assert
         Assertions.assertNotNull(result);
+        Assertions.assertEquals(result.getSize(), getSizeLists());
         verify(clientRepository, times(1)).findAll(pageable);
     }
 

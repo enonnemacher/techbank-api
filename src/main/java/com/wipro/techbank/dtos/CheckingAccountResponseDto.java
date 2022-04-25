@@ -1,5 +1,6 @@
 package com.wipro.techbank.dtos;
 
+import com.wipro.techbank.domain.CheckingAccount;
 import lombok.*;
 
 @AllArgsConstructor
