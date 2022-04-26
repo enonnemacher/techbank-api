@@ -4,70 +4,32 @@ package com.wipro.techbank.tests;
 import com.wipro.techbank.domain.CheckingAccount;
 import com.wipro.techbank.domain.Client;
 import com.wipro.techbank.domain.CreditCard;
+import com.wipro.techbank.domain.SpecialAccount;
 import com.wipro.techbank.dtos.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.wipro.techbank.tests.FactoryClient.CLIENT_DTO_TEST;
+import static com.wipro.techbank.tests.FactoryClient.CLIENT_TEST;
+import static com.wipro.techbank.tests.FactoryCreditCard.CREDIT_CARD_RESPONSE_DTO_TEST;
+import static com.wipro.techbank.tests.FactoryCreditCard.CREDIT_CARD_TEST;
+
 public class Factory {
+    private static final Double LIMIT_CREDIT = 500.00;
+    private static final Double BALANCE = 1500.00;
+    private static final Double SPECIAL_CREDIT = 1700.00;
 
-    public static CreditCard createCreditCard() {
-        CreditCard creditCard = new CreditCard(500.00);
-        creditCard.setId(1L);
-        creditCard.setCardNumber("4527 0144 9327 6163");
-        creditCard.setExpirationDate(LocalDateTime.of(2023, 07, 13, 0, 0));
-        creditCard.setUsedLimit(0.0);
-        creditCard.setSecurityCode((short) 456);
-        return creditCard;
-    }
 
-    public static List<CreditCard> createCreditCardList() {
-        List<CreditCard> list = new ArrayList<>();
-        for(int index = 1; index <= 10; index++) {
-            CreditCard creditCard = new CreditCard(500.00);
-            list.add(creditCard);
-        }
-        return list;
-    }
-
-    public static CreditCardResponseDto createCreditCardDto() {
-        CreditCard entity = createCreditCard();
-        return new CreditCardResponseDto(entity);
-    }
-
-    public static CreditCardRequestDto createCreditCardRequestDto() {
-        CreditCard entity = createCreditCard();
-        return new CreditCardRequestDto(entity);
-    }
-
-    public static Client createClient() {
-        Client client = new Client("Fulano Beltrano dos Testes", "756.394.430-30", "(10) 91998-9673", "fulano.beltrano.testes@techbank.com");
-        return client;
-    }
-
-    public static List<Client> createClientList() {
-        List<Client> list = new ArrayList<>();
-        for(int index = 1; index <= 10; index++) {
-            Client client = new Client("Fulano Beltrano dos Teste"+index, "756.394.430-3"+(index-1), "(10) 91998-967"+(index-1), String.format("fulano.beltrano.testes%d@techbank.com", index));
-            list.add(client);
-        }
-        return list;
-    }
-
-    public static ClientDto createClientDto() {
-        Client entity = createClient();
-        return new ClientDto(entity);
-    }
 
     public static CheckingAccount createCheckingAccount() {
-        Client client = createClient();
-        CreditCard creditCard = createCreditCard();
-        return new CheckingAccount(1500.00, client, creditCard);
+        Client client = CLIENT_TEST;
+        CreditCard creditCard = FactoryCreditCard.CREDIT_CARD_TEST;
+        return new CheckingAccount(BALANCE, client, creditCard);
     }
 
     public static List<CheckingAccount> creteCheckingAccountList() {
-        List<Client> clients = createClientList();
 
         return null;
     }
@@ -85,14 +47,44 @@ public class Factory {
         return checkingAccountResponseDto;
     }
 
+    public static SpecialAccount createSpecialAccount() {
+        Client client = CLIENT_TEST;
+        CreditCard creditCard = FactoryCreditCard.CREDIT_CARD_TEST;
+        return new SpecialAccount(client, creditCard, SPECIAL_CREDIT, 0.00);
+    }
+
     public static CheckingAccountRequestDto createCheckingAccountRequestDto() {
-        ClientDto clientDto = new ClientDto(1L, "Fulano Beltrano dos Testes", "756.394.430-30", "(10) 91998-9673", "fulano.beltrano.testes@techbank.com");
         CheckingAccountRequestDto checkingAccountRequestDto = new CheckingAccountRequestDto();
         checkingAccountRequestDto.setId(1L);
-        checkingAccountRequestDto.setClient(clientDto);
+        checkingAccountRequestDto.setClient(CLIENT_DTO_TEST);
         checkingAccountRequestDto.getClient().setId(1L);
-        checkingAccountRequestDto.setCreditCard(createCreditCardDto());
-        checkingAccountRequestDto.setBalance(1500.00);
+        checkingAccountRequestDto.setCreditCard(CREDIT_CARD_RESPONSE_DTO_TEST);
+        checkingAccountRequestDto.setBalance(BALANCE);
         return checkingAccountRequestDto;
+    }
+
+    public static SpecialAccountResponseDto createSpecialAccountResponseDto() {
+        CheckingAccount entity = createCheckingAccount();
+        SpecialAccountResponseDto specialAccountRequestDto = new SpecialAccountResponseDto();
+        specialAccountRequestDto.setId(1L);
+        specialAccountRequestDto.setClientId(entity.getClient().getId());
+        specialAccountRequestDto.setClientName(entity.getClient().getName());
+        specialAccountRequestDto.setBalance(entity.getBalance());
+        specialAccountRequestDto.setCreditCardCardNumber(entity.getCreditCard().getCardNumber());
+        specialAccountRequestDto.setCreditCardLimitCredit(entity.getCreditCard().getLimitCredit());
+        specialAccountRequestDto.setCreditSpecialUsed(entity.getCreditCard().getUsedLimit());
+        specialAccountRequestDto.setCreditSpecial(SPECIAL_CREDIT);
+
+        return specialAccountRequestDto;
+    }
+
+    public static SpecialAccountRequestDto createSpecialRequestAccount() {
+        SpecialAccountRequestDto specialAccountRequestDto = new SpecialAccountRequestDto();
+        specialAccountRequestDto.setId(1L);
+        specialAccountRequestDto.setClient(CLIENT_TEST);
+        specialAccountRequestDto.getClient().setId(1L);
+        specialAccountRequestDto.setCreditCard(CREDIT_CARD_TEST);
+        specialAccountRequestDto.setBalance(BALANCE);
+        return specialAccountRequestDto;
     }
 }

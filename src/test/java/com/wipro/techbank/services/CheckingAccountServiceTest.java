@@ -11,6 +11,8 @@ import com.wipro.techbank.repositories.CreditCardRepository;
 import com.wipro.techbank.services.exceptions.DataBasesException;
 import com.wipro.techbank.services.exceptions.ResourceNotFoundException;
 import com.wipro.techbank.tests.Factory;
+import com.wipro.techbank.tests.FactoryClient;
+import com.wipro.techbank.tests.FactoryCreditCard;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -30,7 +32,6 @@ import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.times;
 
 @ExtendWith(SpringExtension.class)
-
 class CheckingAccountServiceTest extends TestsServiceAbstract{
 
 
@@ -63,9 +64,9 @@ class CheckingAccountServiceTest extends TestsServiceAbstract{
         super.setUp();
         checkingAccountEntity = Factory.createCheckingAccount();
 
-        entityCient = Factory.createClient();
+        entityCient = FactoryClient.CLIENT_TEST;
 
-        entityCreditCard = Factory.createCreditCard();
+        entityCreditCard = FactoryCreditCard.CREDIT_CARD_TEST;
 
         page = new PageImpl<>(List.of(checkingAccountEntity));
         List<CheckingAccount> list = new ArrayList<>();
@@ -112,7 +113,7 @@ class CheckingAccountServiceTest extends TestsServiceAbstract{
 
     @Test
     @Override
-    public void findByIdShouldReturnCreditCardResponseDtoWhenIdExixts() {
+    public void findByIdShouldReturnDtoWhenIdExixts() {
         CheckingAccountResponseDto result = checkingAccountService.findById(getExistsId());
         Double expectedBalance = 1500.00;
         String expectedCreditCardNumber = "4527 0144 9327 6163";
@@ -145,7 +146,7 @@ class CheckingAccountServiceTest extends TestsServiceAbstract{
 
     @Test
     @Override
-    public void createShouldReturnCreditCardResponseDto() {
+    public void createShouldReturnDto() {
         // Act
         CheckingAccountResponseDto result = checkingAccountService.create(checkingAccountRequestDto);
 

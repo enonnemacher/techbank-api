@@ -6,6 +6,7 @@ import com.wipro.techbank.repositories.ClientRepository;
 import com.wipro.techbank.services.exceptions.DataBasesException;
 import com.wipro.techbank.services.exceptions.ResourceNotFoundException;
 import com.wipro.techbank.tests.Factory;
+import com.wipro.techbank.tests.FactoryClient;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,6 +23,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.Optional;
 
+import static com.wipro.techbank.tests.FactoryClient.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.times;
@@ -37,28 +39,31 @@ class ClientServiceTest extends TestsServiceAbstract{
 
     private Client entity;
     private PageImpl<Client> page;
-    ClientDto clientDto;
+    private ClientDto clientDto;
+
     private final String expectedCpf = "756.394.430-30";
     private final String expectedName = "Fulano Beltrano dos Testes";
     private final String expectedPhoneNumber = "(10) 91998-9673";
     private final String expectedEmail = "fulano.beltrano.testes@techbank.com";
+    private final Integer expectedSizeList = 10;
+
 
     @BeforeEach
     @Override
     public void setUp() {
         super.setUp();
-        entity = Factory.createClient();
+        entity = CLIENT_TEST;
 
-        page = new PageImpl<>(Factory.createClientList());
+        page = new PageImpl<>(CLIENTS_LIST_TEST);
 
-        clientDto = Factory.createClientDto();
+        clientDto = CLIENT_DTO_TEST;
 
-        Mockito.when(clientRepository.save(entity)).thenReturn(entity);
+        when(clientRepository.save(entity)).thenReturn(entity);
 
-        Mockito.when(clientRepository.findAll((Pageable) ArgumentMatchers.any())).thenReturn(page);
+        when(clientRepository.findAll((Pageable) ArgumentMatchers.any())).thenReturn(page);
 
-        Mockito.when(clientRepository.findById(getExistsId())).thenReturn(Optional.of(entity));
-        Mockito.when(clientRepository.findById(getNonExistsId())).thenThrow(ResourceNotFoundException.class);
+        when(clientRepository.findById(getExistsId())).thenReturn(Optional.of(entity));
+        when(clientRepository.findById(getNonExistsId())).thenThrow(ResourceNotFoundException.class);
 
         doNothing().when(clientRepository).deleteById(getExistsId());
         doThrow(ResourceNotFoundException.class).when(clientRepository).deleteById(getNonExistsId());
@@ -76,13 +81,13 @@ class ClientServiceTest extends TestsServiceAbstract{
 
         // Assert
         Assertions.assertNotNull(result);
-        Assertions.assertEquals(result.getSize(), getSizeLists());
+        Assertions.assertEquals(result.getSize(), expectedSizeList);
         verify(clientRepository, times(1)).findAll(pageable);
     }
 
     @Test
     @Override
-    public void findByIdShouldReturnCreditCardResponseDtoWhenIdExixts() {
+    public void findByIdShouldReturnDtoWhenIdExixts() {
         ClientDto result = clientService.findById(getExistsId());
 
         // Assert
@@ -108,8 +113,9 @@ class ClientServiceTest extends TestsServiceAbstract{
 
     @Test
     @Override
-    public void createShouldReturnCreditCardResponseDto() {
+    public void createShouldReturnDto() {
         // Act
+        clientDto.setId(null);
         ClientDto result = clientService.save(clientDto);
 
         // Assert

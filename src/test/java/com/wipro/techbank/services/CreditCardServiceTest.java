@@ -7,6 +7,7 @@ import com.wipro.techbank.repositories.CreditCardRepository;
 import com.wipro.techbank.services.exceptions.DataBasesException;
 import com.wipro.techbank.services.exceptions.ResourceNotFoundException;
 import com.wipro.techbank.tests.Factory;
+import com.wipro.techbank.tests.FactoryCreditCard;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,50 +22,45 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import java.util.List;
 import java.util.Optional;
 
+import static com.wipro.techbank.tests.FactoryCreditCard.*;
 import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.doThrow;
 
 @ExtendWith(SpringExtension.class)
-class CreditCardServiceTest {
+class CreditCardServiceTest extends TestsServiceAbstract{
 
     @InjectMocks
     private CreditCardService creditCardService;
-
     @Mock
     private CreditCardRepository creditCardRepository;
-
     private CreditCardRequestDto requestDto;
     private CreditCard entity;
     private PageImpl<CreditCard> page;
-    private Long existsId;
-    private Long nonExistsId;
-    private Long dependentId;
 
     @BeforeEach
-    void setUp() {
-        existsId = 1L;
-        nonExistsId = 2L;
-        dependentId = 3L;
-        requestDto = Factory.createCreditCardRequestDto();
-        entity = Factory.createCreditCard();
-        page = new PageImpl<>(Factory.createCreditCardList());
+    @Override
+    public void setUp() {
+        super.setUp();
+        requestDto = CREDIT_CARD_REQUEST_DTO_TEST;
+        entity = CREDIT_CARD_TEST;
+        page = new PageImpl<>(CREDIT_CARDS_LIST_TEST);
 
         Mockito.when(creditCardRepository.save(entity)).thenReturn(entity);
 
         Mockito.when(creditCardRepository.findAll((Pageable) ArgumentMatchers.any())).thenReturn(page);
 
-        Mockito.when(creditCardRepository.findById(existsId)).thenReturn(Optional.of(entity));
-        Mockito.when(creditCardRepository.findById(nonExistsId)).thenThrow(ResourceNotFoundException.class);
+        Mockito.when(creditCardRepository.findById(getExistsId())).thenReturn(Optional.of(entity));
+        Mockito.when(creditCardRepository.findById(getNonExistsId())).thenThrow(ResourceNotFoundException.class);
 
-        doNothing().when(creditCardRepository).deleteById(existsId);
-        doThrow(ResourceNotFoundException.class).when(creditCardRepository).deleteById(nonExistsId);
-        doThrow(DataBasesException.class).when(creditCardRepository).deleteById(dependentId);
+        doNothing().when(creditCardRepository).deleteById(getExistsId());
+        doThrow(ResourceNotFoundException.class).when(creditCardRepository).deleteById(getNonExistsId());
+        doThrow(DataBasesException.class).when(creditCardRepository).deleteById(getDependentId());
     }
 
     @Test
+    @Override
     public void findAllShouldReturnPage() {
         // Arrange
         Pageable pageable = PageRequest.of(0, 10);
@@ -79,27 +75,30 @@ class CreditCardServiceTest {
     }
 
     @Test
-    void findByIdShouldReturnCreditCardResponseDtoWhenIdExixts() {
-        CreditCardResponseDto result = creditCardService.findById(existsId);
+    @Override
+    public void findByIdShouldReturnDtoWhenIdExixts() {
+        CreditCardResponseDto result = creditCardService.findById(getExistsId());
 
         // Assert
         Assertions.assertNotNull(result);
-        verify(creditCardRepository, times(1)).findById(existsId);
+        verify(creditCardRepository, times(1)).findById(getExistsId());
     }
 
     @Test
-    void findByIdShouldThrowResourceNotFoundExceptionWhenIdDoesNotExixts() {
+    @Override
+    public void findByIdShouldThrowResourceNotFoundExceptionWhenIdDoesNotExixts() {
         // Assert
         Assertions.assertThrows(ResourceNotFoundException.class, () -> {
-            creditCardService.findById(nonExistsId);
+            creditCardService.findById(getNonExistsId());
         });
 
         // Assert
-        verify(creditCardRepository, times(1)).findById(nonExistsId);
+        verify(creditCardRepository, times(1)).findById(getNonExistsId());
     }
 
     @Test
-    void createShouldReturnCreditCardResponseDto() {
+    @Override
+    public void createShouldReturnDto() {
 
         // Act
         CreditCardResponseDto result = creditCardService.create(requestDto);
@@ -110,26 +109,29 @@ class CreditCardServiceTest {
 
 
     @Test
-    void deleteShouldThrowDataBasesExceptionWhenIdIsDependent() {
+    @Override
+    public void deleteShouldThrowDataBasesExceptionWhenIdIsDependent() {
         Assertions.assertThrows(DataBasesException.class, () -> {
-            creditCardService.delete(dependentId);
+            creditCardService.delete(getDependentId());
         });
-        verify(creditCardRepository, times(1)).deleteById(dependentId);
+        verify(creditCardRepository, times(1)).deleteById(getDependentId());
     }
 
     @Test
-    void deleteShouldThrowResourceNotFoundExceptionWhenIdDoesNotExists() {
+    @Override
+    public void deleteShouldThrowResourceNotFoundExceptionWhenIdDoesNotExists() {
         Assertions.assertThrows(ResourceNotFoundException.class, () -> {
-            creditCardService.delete(nonExistsId);
+            creditCardService.delete(getNonExistsId());
         });
-        verify(creditCardRepository, times(1)).deleteById(nonExistsId);
+        verify(creditCardRepository, times(1)).deleteById(getNonExistsId());
     }
 
     @Test
-    void deleteShouldReturnNothingWhenIdExists() {
+    @Override
+    public void deleteShouldReturnNothingWhenIdExists() {
         Assertions.assertDoesNotThrow(() -> {
-            creditCardService.delete(existsId);
+            creditCardService.delete(getExistsId());
         });
-        verify(creditCardRepository, times(1)).deleteById(existsId);
+        verify(creditCardRepository, times(1)).deleteById(getExistsId());
     }
 }

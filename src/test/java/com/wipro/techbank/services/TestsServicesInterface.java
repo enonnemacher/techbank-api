@@ -6,11 +6,11 @@ public interface TestsServicesInterface {
 
     void findAllShouldReturnPage();
 
-    void findByIdShouldReturnCreditCardResponseDtoWhenIdExixts();
+    void findByIdShouldReturnDtoWhenIdExixts();
 
     void findByIdShouldThrowResourceNotFoundExceptionWhenIdDoesNotExixts();
 
-    void createShouldReturnCreditCardResponseDto();
+    void createShouldReturnDto();
 
     void deleteShouldThrowDataBasesExceptionWhenIdIsDependent();
 

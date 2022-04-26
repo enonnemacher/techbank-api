@@ -48,14 +48,15 @@ public class SpecialAccountService {
         return toSpecialAccountDto(specialAccountDb);
     }
 
-    public void create(SpecialAccountRequestDto specialAccountRequestDto){
+    public SpecialAccountResponseDto create(SpecialAccountRequestDto specialAccountRequestDto){
         Long idClient = specialAccountRequestDto.getClient().getId();
         Optional<Client> client = clientRepository.findById(idClient);
         if(!client.isPresent()){
             throw new ResourceNotFoundException("Entidade não encontrada");
         }
         SpecialAccount specialAccount = toSpecialAccount(specialAccountRequestDto);
-        specialAccountRepository.save(specialAccount);
+        specialAccount = specialAccountRepository.save(specialAccount);
+        return toSpecialAccountDto(specialAccount);
     }
 
     public SpecialAccountResponseDto updateSpecialAccount(Long id, SpecialAccountRequestDto specialAccountRequestDto){
@@ -68,12 +69,13 @@ public class SpecialAccountService {
         return toSpecialAccountDto(specialAccountDb);
     }
 
-    public void remove(Long id){
-        Optional<SpecialAccount> optionalSpecialAccount = specialAccountRepository.findById(id);
-        if(optionalSpecialAccount.isPresent()){
+    public void remove(Long id) {
+        try {
             specialAccountRepository.deleteById(id);
-        } else {
-            throw new ResourceNotFoundException("Entidade não encontrada");
+        } catch (EmptyResultDataAccessException e) {
+            throw new ResourceNotFoundException("Id not found " + id);
+        } catch (DataIntegrityViolationException e) {
+            throw new DataBasesException("Integrity violation");
         }
     }
 
