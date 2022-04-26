@@ -12,9 +12,9 @@ public class FactoryClient {
     private static final String CLIENT_PHONE_NUMBER = "(10) 91998-9673";
     private static final String CLIENT_EMAIL = "fulano.beltrano.testes@techbank.com";
 
-    public static final Client CLIENT_TEST = new Client(CLIENT_NAME, CLIENT_CPF, CLIENT_PHONE_NUMBER, CLIENT_EMAIL);
-    public static final List<Client> CLIENTS_LIST_TEST = createClientList();
-    public static final ClientDto CLIENT_DTO_TEST = new ClientDto(CLIENT_TEST);
+    public static final Client CLIENT_ENTITY = new Client(CLIENT_NAME, CLIENT_CPF, CLIENT_PHONE_NUMBER, CLIENT_EMAIL);
+    public static final List<Client> CLIENTS_ENTITY_LIST = createClientList();
+    public static final ClientDto CLIENT_DTO = new ClientDto(CLIENT_ENTITY);
 
     private static List<Client> createClientList() {
         List<Client> list = new ArrayList<>();

@@ -5,6 +5,7 @@ import com.wipro.techbank.dtos.ClientDto;
 import com.wipro.techbank.repositories.ClientRepository;
 import com.wipro.techbank.services.exceptions.DataBasesException;
 import com.wipro.techbank.services.exceptions.ResourceNotFoundException;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -41,18 +42,17 @@ class ClientServiceTest extends TestsServiceAbstract{
     private final String expectedName = "Fulano Beltrano dos Testes";
     private final String expectedPhoneNumber = "(10) 91998-9673";
     private final String expectedEmail = "fulano.beltrano.testes@techbank.com";
-    private final Integer expectedSizeList = 10;
 
 
     @BeforeEach
     @Override
     public void setUp() {
         super.setUp();
-        entity = CLIENT_TEST;
+        entity = CLIENT_ENTITY;
 
-        page = new PageImpl<>(CLIENTS_LIST_TEST);
+        page = new PageImpl<>(CLIENTS_ENTITY_LIST);
 
-        clientDto = CLIENT_DTO_TEST;
+        clientDto = CLIENT_DTO;
 
         when(clientRepository.save(entity)).thenReturn(entity);
 
@@ -61,9 +61,16 @@ class ClientServiceTest extends TestsServiceAbstract{
         when(clientRepository.findById(getExistsId())).thenReturn(Optional.of(entity));
         when(clientRepository.findById(getNonExistsId())).thenThrow(ResourceNotFoundException.class);
 
+        when(clientRepository.getById(getExistsId())).thenReturn(entity);
+
         doNothing().when(clientRepository).deleteById(getExistsId());
         doThrow(ResourceNotFoundException.class).when(clientRepository).deleteById(getNonExistsId());
         doThrow(DataBasesException.class).when(clientRepository).deleteById(getDependentId());
+    }
+
+    @AfterEach
+    public void afterEach() {
+        entity = CLIENT_ENTITY;
     }
 
     @Test
@@ -71,12 +78,14 @@ class ClientServiceTest extends TestsServiceAbstract{
     public void findAllShouldReturnPage() {
         // Arrange
         Pageable pageable = PageRequest.of(0, 10);
+        Integer expectedSizeList = 10;
 
         // Act
         Page<ClientDto> result = clientService.findAll(pageable);
 
         // Assert
         Assertions.assertNotNull(result);
+
         Assertions.assertEquals(result.getSize(), expectedSizeList);
         verify(clientRepository, times(1)).findAll(pageable);
     }
@@ -111,7 +120,7 @@ class ClientServiceTest extends TestsServiceAbstract{
     @Override
     public void createShouldReturnDto() {
         // Act
-        clientDto.setId(null);
+//        clientDto.setId(null);
         ClientDto result = clientService.save(clientDto);
 
         // Assert
@@ -148,4 +157,27 @@ class ClientServiceTest extends TestsServiceAbstract{
         });
         verify(clientRepository, times(1)).deleteById(getExistsId());
     }
+
+//    @Test
+//    public void updateShouldReturnDtoWhenIdExists() {
+//        ClientDto clientUpdateDto = new ClientDto();
+//        clientUpdateDto.setCpf("756.394.430-30");
+//        clientUpdateDto.setName("Fulano Beltrano dos Testes UPDATE");
+//        clientUpdateDto.setEmail("fulano.beltrano.testes.UPDATE@techbank.com");
+//        clientUpdateDto.setPhoneNumber("(62) 91998-9673");
+//        Client entityUpdate = entity;
+//        entityUpdate.setId(1L);
+//
+//        // when(clientRepository.getById(getExistsId())).thenReturn(entityUpdate);
+//
+//        // Act
+//        ClientDto result = clientService.update(getExistsId(), clientUpdateDto);
+//        // Assert
+//        Assertions.assertNotNull(result);
+//        Assertions.assertEquals(result.getCpf(), "756.394.430-30");
+//        Assertions.assertEquals(result.getName(), "Fulano Beltrano dos Testes UPDATE");
+//        Assertions.assertEquals(result.getPhoneNumber(), "(62) 91998-9673");
+//        Assertions.assertEquals(result.getEmail(), "fulano.beltrano.testes.UPDATE@techbank.com");
+//        // Assertions.assertEquals(result.getId(), getExistsId());
+//    }
 }

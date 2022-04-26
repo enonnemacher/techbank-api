@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static com.wipro.techbank.tests.FactoryClient.CLIENT_TEST;
+import static com.wipro.techbank.tests.FactoryClient.CLIENT_ENTITY;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(SpringExtension.class)
@@ -62,7 +62,7 @@ class SpecialAccountServiceTest extends TestsServiceAbstract{
         super.setUp();
         specialAccountEntity = FactoryAccounts.createSpecialAccount();
 
-        entityCient = CLIENT_TEST;
+        entityCient = CLIENT_ENTITY;
 
         entityCreditCard = FactoryCreditCard.CREDIT_CARD_TEST;
 

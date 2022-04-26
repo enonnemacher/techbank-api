@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static com.wipro.techbank.tests.FactoryAccounts.CHECKING_ACCOUNT_GET_BY_ID_ENTITY;
 import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.times;
 
@@ -64,7 +65,7 @@ class CheckingAccountServiceTest extends TestsServiceAbstract{
         super.setUp();
         checkingAccountEntity = FactoryAccounts.createCheckingAccount();
 
-        entityCient = FactoryClient.CLIENT_TEST;
+        entityCient = FactoryClient.CLIENT_ENTITY;
 
         entityCreditCard = FactoryCreditCard.CREDIT_CARD_TEST;
 
@@ -87,12 +88,14 @@ class CheckingAccountServiceTest extends TestsServiceAbstract{
         Mockito.when(checkingAccountRepository.findById(getNonExistsId())).thenThrow(ResourceNotFoundException.class);
 
         Mockito.when(clientRepository.findById(getExistsId())).thenReturn(Optional.of(entityCient));
-        Mockito.when(clientRepository.getById(getExistsId())).thenReturn(entityCient);
         Mockito.when(clientRepository.findById(getNonExistsId())).thenThrow(ResourceNotFoundException.class);
+
+        Mockito.when(clientRepository.getById(getExistsId())).thenReturn(entityCient);
+        Mockito.when(creditCardRepository.getById(getExistsId())).thenReturn(entityCreditCard);
+        Mockito.when(checkingAccountRepository.getById(getExistsId())).thenReturn(CHECKING_ACCOUNT_GET_BY_ID_ENTITY);
 
         Mockito.when(creditCardRepository.findById(getExistsId())).thenReturn(Optional.of(entityCreditCard));
         Mockito.when(creditCardRepository.findById(getExistsId())).thenThrow(ResourceNotFoundException.class);
-        Mockito.when(creditCardRepository.getById(getExistsId())).thenReturn(entityCreditCard);
 
         doNothing().when(checkingAccountRepository).deleteById(getExistsId());
         doThrow(ResourceNotFoundException.class).when(checkingAccountRepository).deleteById(getNonExistsId());

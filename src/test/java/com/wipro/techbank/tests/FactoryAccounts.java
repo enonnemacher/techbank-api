@@ -7,19 +7,30 @@ import com.wipro.techbank.dtos.*;
 
 import java.util.List;
 
-import static com.wipro.techbank.tests.FactoryClient.CLIENT_DTO_TEST;
-import static com.wipro.techbank.tests.FactoryClient.CLIENT_TEST;
+import static com.wipro.techbank.tests.FactoryClient.CLIENT_DTO;
+import static com.wipro.techbank.tests.FactoryClient.CLIENT_ENTITY;
 import static com.wipro.techbank.tests.FactoryCreditCard.CREDIT_CARD_RESPONSE_DTO_TEST;
 import static com.wipro.techbank.tests.FactoryCreditCard.CREDIT_CARD_TEST;
 
 public class FactoryAccounts {
     private static final Double BALANCE = 1500.00;
     private static final Double SPECIAL_CREDIT = 1700.00;
+    private static final Long CHECKING_ACCOUNT_ID = 1L;
+    private static final Long SPECIAL_ACCOUNT_ID = 2L;
 
+    public static final CheckingAccount CHECKING_ACCOUNT_ENTITY = createCheckingAccount();
+
+    public static final CheckingAccount CHECKING_ACCOUNT_GET_BY_ID_ENTITY = createCheckingAccountGetById();
 
 
     public static CheckingAccount createCheckingAccount() {
-        return new CheckingAccount(BALANCE, CLIENT_TEST, CREDIT_CARD_TEST);
+        return new CheckingAccount(BALANCE, CLIENT_ENTITY, CREDIT_CARD_TEST);
+    }
+
+    public static CheckingAccount createCheckingAccountGetById() {
+        CheckingAccount checkingAccount = CHECKING_ACCOUNT_ENTITY;
+        checkingAccount.setId(CHECKING_ACCOUNT_ID);
+        return checkingAccount;
     }
 
     public static List<CheckingAccount> creteCheckingAccountList() {
@@ -30,7 +41,7 @@ public class FactoryAccounts {
     public static CheckingAccountResponseDto createCheckingAccountDto() {
         CheckingAccount entity = createCheckingAccount();
         CheckingAccountResponseDto checkingAccountResponseDto = new CheckingAccountResponseDto();
-        checkingAccountResponseDto.setId(1L);
+        checkingAccountResponseDto.setId(entity.getId());
         checkingAccountResponseDto.setClientId(entity.getClient().getId());
         checkingAccountResponseDto.setClientName(entity.getClient().getName());
         checkingAccountResponseDto.setBalance(entity.getBalance());
@@ -41,13 +52,14 @@ public class FactoryAccounts {
     }
 
     public static SpecialAccount createSpecialAccount() {
-        return new SpecialAccount(CLIENT_TEST, CREDIT_CARD_TEST, SPECIAL_CREDIT, 0.00);
+
+        return new SpecialAccount(CLIENT_ENTITY, CREDIT_CARD_TEST, SPECIAL_CREDIT, 0.00);
     }
 
     public static CheckingAccountRequestDto createCheckingAccountRequestDto() {
         CheckingAccountRequestDto checkingAccountRequestDto = new CheckingAccountRequestDto();
-        checkingAccountRequestDto.setId(1L);
-        checkingAccountRequestDto.setClient(CLIENT_DTO_TEST);
+        checkingAccountRequestDto.setId(CHECKING_ACCOUNT_ID);
+        checkingAccountRequestDto.setClient(CLIENT_DTO);
         checkingAccountRequestDto.getClient().setId(1L);
         checkingAccountRequestDto.setCreditCard(CREDIT_CARD_RESPONSE_DTO_TEST);
         checkingAccountRequestDto.setBalance(BALANCE);
@@ -57,7 +69,7 @@ public class FactoryAccounts {
     public static SpecialAccountResponseDto createSpecialAccountResponseDto() {
         CheckingAccount entity = createCheckingAccount();
         SpecialAccountResponseDto specialAccountRequestDto = new SpecialAccountResponseDto();
-        specialAccountRequestDto.setId(1L);
+        specialAccountRequestDto.setId(SPECIAL_ACCOUNT_ID);
         specialAccountRequestDto.setClientId(entity.getClient().getId());
         specialAccountRequestDto.setClientName(entity.getClient().getName());
         specialAccountRequestDto.setBalance(entity.getBalance());
@@ -71,8 +83,8 @@ public class FactoryAccounts {
 
     public static SpecialAccountRequestDto createSpecialRequestAccount() {
         SpecialAccountRequestDto specialAccountRequestDto = new SpecialAccountRequestDto();
-        specialAccountRequestDto.setId(1L);
-        specialAccountRequestDto.setClient(CLIENT_TEST);
+        specialAccountRequestDto.setId(SPECIAL_ACCOUNT_ID);
+        specialAccountRequestDto.setClient(CLIENT_ENTITY);
         specialAccountRequestDto.getClient().setId(1L);
         specialAccountRequestDto.setCreditCard(CREDIT_CARD_TEST);
         specialAccountRequestDto.setBalance(BALANCE);
