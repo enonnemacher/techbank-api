@@ -86,13 +86,13 @@ public class Factory {
     }
 
     public static CheckingAccountRequestDto createCheckingAccountRequestDto() {
-
+        ClientDto clientDto = new ClientDto(1L, "Fulano Beltrano dos Testes", "756.394.430-30", "(10) 91998-9673", "fulano.beltrano.testes@techbank.com");
         CheckingAccountRequestDto checkingAccountRequestDto = new CheckingAccountRequestDto();
         checkingAccountRequestDto.setId(1L);
-//        checkingAccountRequestDto.setClient(createClientDto());
-//        checkingAccountRequestDto.getClient().setId(1L);
-//        checkingAccountRequestDto.setCreditCard(createCreditCardDto());
-//        checkingAccountRequestDto.setBalance(1500.00);
+        checkingAccountRequestDto.setClient(clientDto);
+        checkingAccountRequestDto.getClient().setId(1L);
+        checkingAccountRequestDto.setCreditCard(createCreditCardDto());
+        checkingAccountRequestDto.setBalance(1500.00);
         return checkingAccountRequestDto;
     }
 }

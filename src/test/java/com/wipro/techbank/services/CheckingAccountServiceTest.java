@@ -5,7 +5,6 @@ import com.wipro.techbank.domain.Client;
 import com.wipro.techbank.domain.CreditCard;
 import com.wipro.techbank.dtos.CheckingAccountRequestDto;
 import com.wipro.techbank.dtos.CheckingAccountResponseDto;
-import com.wipro.techbank.dtos.ClientDto;
 import com.wipro.techbank.repositories.CheckingAccountRepository;
 import com.wipro.techbank.repositories.ClientRepository;
 import com.wipro.techbank.repositories.CreditCardRepository;
@@ -20,7 +19,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -28,7 +26,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.times;
 
@@ -52,7 +49,7 @@ class CheckingAccountServiceTest extends TestsServiceAbstract{
     @Mock
     CreditCardRepository creditCardRepository;
 
-    private CheckingAccount entity;
+    private CheckingAccount checkingAccountEntity;
 
     private Client entityCient;
     private CreditCard entityCreditCard;
@@ -64,28 +61,37 @@ class CheckingAccountServiceTest extends TestsServiceAbstract{
     @Override
     public void setUp() {
         super.setUp();
-        entity = Factory.createCheckingAccount();
+        checkingAccountEntity = Factory.createCheckingAccount();
+        checkingAccountEntity.getClient().setId(1L);
         entityCient = Factory.createClient();
+        entityCient.setId(getExistsId());
         entityCreditCard = Factory.createCreditCard();
 
-        page = new PageImpl<>(List.of(entity));
+        page = new PageImpl<>(List.of(checkingAccountEntity));
         List<CheckingAccount> list = new ArrayList<>();
-        list.add(entity);
+        list.add(checkingAccountEntity);
 
         checkingAccountDto = Factory.createCheckingAccountDto();
+        checkingAccountDto.setClientId(getExistsId());
         checkingAccountRequestDto = Factory.createCheckingAccountRequestDto();
 
-        Mockito.when(modelMapper.map(entity, CheckingAccountResponseDto.class)).thenReturn(checkingAccountDto);
-        Mockito.when(checkingAccountRepository.save(entity)).thenReturn(entity);
+        Mockito.when(modelMapper.map(checkingAccountEntity, CheckingAccountResponseDto.class)).thenReturn(checkingAccountDto);
+        Mockito.when(modelMapper.map(checkingAccountRequestDto, CheckingAccount.class)).thenReturn(checkingAccountEntity);
+
+        Mockito.when(checkingAccountRepository.save(checkingAccountEntity)).thenReturn(checkingAccountEntity);
 
         Mockito.when(checkingAccountRepository.findAll()).thenReturn(list);
 
-        Mockito.when(checkingAccountRepository.findById(getExistsId())).thenReturn(Optional.of(entity));
+        Mockito.when(checkingAccountRepository.findById(getExistsId())).thenReturn(Optional.of(checkingAccountEntity));
         Mockito.when(checkingAccountRepository.findById(getNonExistsId())).thenThrow(ResourceNotFoundException.class);
+
         Mockito.when(clientRepository.findById(getExistsId())).thenReturn(Optional.of(entityCient));
+        Mockito.when(clientRepository.getById(getExistsId())).thenReturn(entityCient);
         Mockito.when(clientRepository.findById(getNonExistsId())).thenThrow(ResourceNotFoundException.class);
+
         Mockito.when(creditCardRepository.findById(getExistsId())).thenReturn(Optional.of(entityCreditCard));
         Mockito.when(creditCardRepository.findById(getExistsId())).thenThrow(ResourceNotFoundException.class);
+        Mockito.when(creditCardRepository.getById(getExistsId())).thenReturn(entityCreditCard);
 
         doNothing().when(checkingAccountRepository).deleteById(getExistsId());
         doThrow(ResourceNotFoundException.class).when(checkingAccountRepository).deleteById(getNonExistsId());
