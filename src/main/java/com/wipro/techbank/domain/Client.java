@@ -5,6 +5,7 @@ import lombok.*;
 import javax.persistence.*;
 import java.io.Serializable;
 
+
 @Entity
 @Table(name = "tb_client")
 @Getter

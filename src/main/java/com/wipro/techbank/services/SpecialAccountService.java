@@ -35,7 +35,7 @@ public class SpecialAccountService {
     public SpecialAccountDto findById(Long id){
         SpecialAccount specialAccount = specialAccountRepository.findById(id).get();
         SpecialAccountDto dto = new SpecialAccountDto();
-        return copyDtoToDTO(dto, specialAccount);
+        return copyToDTO(dto, specialAccount);
     }
 
     public SpecialAccount update(Long id, SpecialAccount specialAccount){
@@ -57,16 +57,20 @@ public class SpecialAccountService {
 
     private void copyDtoToEntity(SpecialAccountDto dto, SpecialAccount entity) {
         entity.setId(dto.getId());
+        entity.setClient(dto.getClient());
         entity.setBalance(dto.getBalance());
         entity.setCreditSpecial(dto.getCreditSpecial());
-        entity.setCreditSpecialUsed(dto.getCreditSpecialUsed());
+        entity.setCreditCard(dto.getCreditCard());
+//        entity.setCreditSpecialUsed(dto.getCreditSpecialUsed());
     }
 
-    private SpecialAccountDto copyDtoToDTO(SpecialAccountDto dto, SpecialAccount entity) {
+    private SpecialAccountDto copyToDTO(SpecialAccountDto dto, SpecialAccount entity) {
         dto.setId(entity.getId());
+        dto.setClient(entity.getClient());
         dto.setBalance(entity.getBalance());
         dto.setCreditSpecial(entity.getCreditSpecial());
-        dto.setCreditSpecialUsed(entity.getCreditSpecialUsed());
+        dto.setCreditCard(entity.getCreditCard());
+//        dto.setCreditSpecialUsed(entity.getCreditSpecialUsed());
         return dto;
     }
 }

@@ -5,6 +5,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
+
 @Entity
 @Table(name = "tb_credit_card")
 @Getter
@@ -36,4 +37,3 @@ public class CreditCard implements Serializable {
     private Double usedLimit;
 
 }
-

@@ -14,7 +14,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 
 @RestController
-@RequestMapping("/special-account")
+@RequestMapping("/special-accounts")
 public class SpecialAccountController {
 
     @Autowired
@@ -22,10 +22,10 @@ public class SpecialAccountController {
 
     @PostMapping
     public ResponseEntity<SpecialAccountDto> create(@RequestBody SpecialAccountDto specialAccountDto) {
-        SpecialAccountDto creditCardResponseDto = specialAccountService.create(specialAccountDto);
+        SpecialAccountDto specialAccountDto2 = specialAccountService.create(specialAccountDto);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri().path("/{id}")
                 .buildAndExpand(specialAccountDto.getId()).toUri();
-        return ResponseEntity.created(uri).body(specialAccountDto);
+        return ResponseEntity.created(uri).body(specialAccountDto2);
     }
 
     @GetMapping

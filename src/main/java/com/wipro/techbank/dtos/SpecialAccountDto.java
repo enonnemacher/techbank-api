@@ -1,6 +1,7 @@
 package com.wipro.techbank.dtos;
 
 import com.wipro.techbank.domain.Client;
+import com.wipro.techbank.domain.CreditCard;
 import com.wipro.techbank.domain.SpecialAccount;
 import lombok.*;
 
@@ -19,28 +20,29 @@ public class SpecialAccountDto {
     @EqualsAndHashCode.Include
     private Long id;
 
+    private Client client;
     private Double balance;
 
     private Double creditSpecial;
 
-    private Double creditSpecialUsed;
-    private List<ClientDto> clients = new ArrayList<>();
+    private CreditCard creditCard;
 
-    private List<CreditCardResponseDto> creditCards = new ArrayList<>();
-
-    private List<TransactionResponseDto> operations = new ArrayList<>();
+//    private Double creditSpecialUsed;
 
 
     public SpecialAccountDto(SpecialAccount specialAccount) {
         id = specialAccount.getId();
+        client = specialAccount.getClient();
         balance = specialAccount.getBalance();
         creditSpecial = specialAccount.getCreditSpecial();
-        creditSpecialUsed = specialAccount.getCreditSpecialUsed();
+        creditCard = specialAccount.getCreditCard();
+
+//        creditSpecialUsed = specialAccount.getCreditSpecialUsed();
     }
 
-    public SpecialAccountDto(SpecialAccount entity, List<Client> clients) {
-        this(entity);
-        clients.forEach(client -> this.clients.add(new ClientDto(client)));
-    }
+//    public SpecialAccountDto(SpecialAccount entity, List<Client> clients) {
+//        this(entity);
+//        clients.forEach(client -> this.clients.add(new ClientDto(client)));
+//    }
 
 }
