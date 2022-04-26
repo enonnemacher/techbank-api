@@ -2,13 +2,9 @@ package com.wipro.techbank.tests;
 
 
 import com.wipro.techbank.domain.CheckingAccount;
-import com.wipro.techbank.domain.Client;
-import com.wipro.techbank.domain.CreditCard;
 import com.wipro.techbank.domain.SpecialAccount;
 import com.wipro.techbank.dtos.*;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 import static com.wipro.techbank.tests.FactoryClient.CLIENT_DTO_TEST;
@@ -16,17 +12,14 @@ import static com.wipro.techbank.tests.FactoryClient.CLIENT_TEST;
 import static com.wipro.techbank.tests.FactoryCreditCard.CREDIT_CARD_RESPONSE_DTO_TEST;
 import static com.wipro.techbank.tests.FactoryCreditCard.CREDIT_CARD_TEST;
 
-public class Factory {
-    private static final Double LIMIT_CREDIT = 500.00;
+public class FactoryAccounts {
     private static final Double BALANCE = 1500.00;
     private static final Double SPECIAL_CREDIT = 1700.00;
 
 
 
     public static CheckingAccount createCheckingAccount() {
-        Client client = CLIENT_TEST;
-        CreditCard creditCard = FactoryCreditCard.CREDIT_CARD_TEST;
-        return new CheckingAccount(BALANCE, client, creditCard);
+        return new CheckingAccount(BALANCE, CLIENT_TEST, CREDIT_CARD_TEST);
     }
 
     public static List<CheckingAccount> creteCheckingAccountList() {
@@ -48,9 +41,7 @@ public class Factory {
     }
 
     public static SpecialAccount createSpecialAccount() {
-        Client client = CLIENT_TEST;
-        CreditCard creditCard = FactoryCreditCard.CREDIT_CARD_TEST;
-        return new SpecialAccount(client, creditCard, SPECIAL_CREDIT, 0.00);
+        return new SpecialAccount(CLIENT_TEST, CREDIT_CARD_TEST, SPECIAL_CREDIT, 0.00);
     }
 
     public static CheckingAccountRequestDto createCheckingAccountRequestDto() {

@@ -10,7 +10,7 @@ import com.wipro.techbank.repositories.ClientRepository;
 import com.wipro.techbank.repositories.CreditCardRepository;
 import com.wipro.techbank.services.exceptions.DataBasesException;
 import com.wipro.techbank.services.exceptions.ResourceNotFoundException;
-import com.wipro.techbank.tests.Factory;
+import com.wipro.techbank.tests.FactoryAccounts;
 import com.wipro.techbank.tests.FactoryClient;
 import com.wipro.techbank.tests.FactoryCreditCard;
 import org.junit.jupiter.api.Assertions;
@@ -62,7 +62,7 @@ class CheckingAccountServiceTest extends TestsServiceAbstract{
     @Override
     public void setUp() {
         super.setUp();
-        checkingAccountEntity = Factory.createCheckingAccount();
+        checkingAccountEntity = FactoryAccounts.createCheckingAccount();
 
         entityCient = FactoryClient.CLIENT_TEST;
 
@@ -72,9 +72,9 @@ class CheckingAccountServiceTest extends TestsServiceAbstract{
         List<CheckingAccount> list = new ArrayList<>();
         list.add(checkingAccountEntity);
 
-        checkingAccountDto = Factory.createCheckingAccountDto();
+        checkingAccountDto = FactoryAccounts.createCheckingAccountDto();
         checkingAccountDto.setClientId(getExistsId());
-        checkingAccountRequestDto = Factory.createCheckingAccountRequestDto();
+        checkingAccountRequestDto = FactoryAccounts.createCheckingAccountRequestDto();
 
         Mockito.when(modelMapper.map(checkingAccountEntity, CheckingAccountResponseDto.class)).thenReturn(checkingAccountDto);
         Mockito.when(modelMapper.map(checkingAccountRequestDto, CheckingAccount.class)).thenReturn(checkingAccountEntity);

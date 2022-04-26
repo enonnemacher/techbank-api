@@ -10,8 +10,7 @@ import com.wipro.techbank.repositories.ClientRepository;
 import com.wipro.techbank.repositories.CreditCardRepository;
 import com.wipro.techbank.services.exceptions.DataBasesException;
 import com.wipro.techbank.services.exceptions.ResourceNotFoundException;
-import com.wipro.techbank.tests.Factory;
-import com.wipro.techbank.tests.FactoryClient;
+import com.wipro.techbank.tests.FactoryAccounts;
 import com.wipro.techbank.tests.FactoryCreditCard;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,7 +18,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -62,7 +60,7 @@ class SpecialAccountServiceTest extends TestsServiceAbstract{
     @Override
     public void setUp() {
         super.setUp();
-        specialAccountEntity = Factory.createSpecialAccount();
+        specialAccountEntity = FactoryAccounts.createSpecialAccount();
 
         entityCient = CLIENT_TEST;
 
@@ -72,9 +70,9 @@ class SpecialAccountServiceTest extends TestsServiceAbstract{
         List<SpecialAccount> list = new ArrayList<>();
         list.add(specialAccountEntity);
 
-        specialAccountDto = Factory.createSpecialAccountResponseDto();
+        specialAccountDto = FactoryAccounts.createSpecialAccountResponseDto();
         specialAccountDto.setClientId(getExistsId());
-        specialAccountRequestDto = Factory.createSpecialRequestAccount();
+        specialAccountRequestDto = FactoryAccounts.createSpecialRequestAccount();
 
         when(modelMapper.map(specialAccountEntity, SpecialAccountResponseDto.class)).thenReturn(specialAccountDto);
         when(modelMapper.map(specialAccountRequestDto, SpecialAccount.class)).thenReturn(specialAccountEntity);

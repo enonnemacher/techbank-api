@@ -6,8 +6,6 @@ import com.wipro.techbank.dtos.CreditCardResponseDto;
 import com.wipro.techbank.repositories.CreditCardRepository;
 import com.wipro.techbank.services.exceptions.DataBasesException;
 import com.wipro.techbank.services.exceptions.ResourceNotFoundException;
-import com.wipro.techbank.tests.Factory;
-import com.wipro.techbank.tests.FactoryCreditCard;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
