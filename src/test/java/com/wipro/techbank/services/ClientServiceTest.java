@@ -45,8 +45,7 @@ class ClientServiceTest extends TestsServiceAbstract{
 
 
     @BeforeEach
-    @Override
-    public void setUp() {
+    public void setUpClient() {
         super.setUp();
         entity = CLIENT_ENTITY;
 
