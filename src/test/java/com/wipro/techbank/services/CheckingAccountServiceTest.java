@@ -62,9 +62,9 @@ class CheckingAccountServiceTest extends TestsServiceAbstract{
     public void setUp() {
         super.setUp();
         checkingAccountEntity = Factory.createCheckingAccount();
-        checkingAccountEntity.getClient().setId(1L);
+
         entityCient = Factory.createClient();
-        entityCient.setId(getExistsId());
+
         entityCreditCard = Factory.createCreditCard();
 
         page = new PageImpl<>(List.of(checkingAccountEntity));
@@ -156,18 +156,28 @@ class CheckingAccountServiceTest extends TestsServiceAbstract{
     @Test
     @Override
     public void deleteShouldThrowDataBasesExceptionWhenIdIsDependent() {
-
+        Assertions.assertThrows(DataBasesException.class, () -> {
+            checkingAccountService.remove(getDependentId());
+        });
+        verify(checkingAccountRepository, times(1)).deleteById(getDependentId());
     }
 
     @Test
     @Override
     public void deleteShouldThrowResourceNotFoundExceptionWhenIdDoesNotExists() {
-
+        Assertions.assertThrows(ResourceNotFoundException.class, () -> {
+            checkingAccountService.remove(getNonExistsId());
+        });
+        verify(checkingAccountRepository, times(1)).deleteById(getNonExistsId());
     }
 
     @Test
     @Override
     public void deleteShouldReturnNothingWhenIdExists() {
+        Assertions.assertDoesNotThrow(() -> {
+            checkingAccountService.remove(getExistsId());
+        });
+        verify(checkingAccountRepository, times(1)).deleteById(getExistsId());
 
     }
 }
