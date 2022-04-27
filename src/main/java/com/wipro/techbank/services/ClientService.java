@@ -5,6 +5,8 @@ import com.wipro.techbank.dtos.ClientDto;
 import com.wipro.techbank.repositories.ClientRepository;
 import com.wipro.techbank.services.exceptions.DataBasesException;
 import com.wipro.techbank.services.exceptions.ResourceNotFoundException;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -20,49 +22,51 @@ public class ClientService {
     @Autowired
     private ClientRepository clientRepository;
 
+    @Autowired
+    private ModelMapper modelMapper;
+
     public ClientDto save(ClientDto clientDto) {
-        Client entity = new Client();
-        copyDtoToEntity(clientDto, entity);
-        entity = clientRepository.save(entity);
-        return new ClientDto(entity);
+        Client client = copyDtoToEntity(clientDto);
+        clientRepository.save(client);
+        return copyEntityToDTo(client);
     }
 
     public Page<ClientDto> findAll(Pageable pageable) {
         Page<Client> clientsList = clientRepository.findAll(pageable);
-        return clientsList.map(ClientDto::new);
+        return clientsList.map(this::copyEntityToDTo);
     }
 
     public ClientDto findById(Long id) {
         Optional<Client> client = clientRepository.findById(id);
         Client entity = client.orElseThrow(() -> new ResourceNotFoundException("Entidade não encontrada."));
-        return new ClientDto(entity);
+        return copyEntityToDTo(client.get());
     }
 
     public ClientDto update(Long id, ClientDto clientDto) {
         Client entity = clientRepository.getById(id);
-        copyDtoToEntity(clientDto, entity);
-        entity = clientRepository.save(entity);
-        return new ClientDto(entity);
+        Client client = new Client();
+        BeanUtils.copyProperties(copyDtoToEntity(clientDto), client);
+        client.setId(id);
+        BeanUtils.copyProperties(client, entity);
+        clientRepository.save(entity);
+        return copyEntityToDTo(entity);
     }
 
     public void remove(Long id) {
         try {
             clientRepository.deleteById(id);
-        } catch (EmptyResultDataAccessException e){
+        } catch (EmptyResultDataAccessException e) {
             throw new ResourceNotFoundException("Id " + id + " não encontrado.");
-        } catch (DataIntegrityViolationException e){
+        } catch (DataIntegrityViolationException e) {
             throw new DataBasesException("Violação de integridade");
         }
     }
 
-    private void copyDtoToEntity(ClientDto clientDto, Client client) {
-        if (clientDto.getId() != null) {
-            client.setId(clientDto.getId());
-        }
+    private Client copyDtoToEntity(ClientDto clientDto) {
+        return modelMapper.map(clientDto, Client.class);
+    }
 
-        client.setName(clientDto.getName());
-        client.setCpf(clientDto.getCpf());
-        client.setPhoneNumber(clientDto.getPhoneNumber());
-        client.setEmail(clientDto.getEmail());
+    private ClientDto copyEntityToDTo(Client entity) {
+        return modelMapper.map(entity, ClientDto.class);
     }
 }
