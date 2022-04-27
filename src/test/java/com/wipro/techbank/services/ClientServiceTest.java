@@ -14,7 +14,6 @@ import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -28,7 +27,7 @@ import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.times;
 
 @ExtendWith(SpringExtension.class)
-class ClientServiceTest extends TestsServiceAbstract{
+class ClientServiceTest {
 
     @InjectMocks
     private ClientService clientService;
@@ -47,11 +46,15 @@ class ClientServiceTest extends TestsServiceAbstract{
     private final String expectedName = "Fulano Beltrano dos Testes";
     private final String expectedPhoneNumber = "(10) 91998-9673";
     private final String expectedEmail = "fulano.beltrano.testes@techbank.com";
-
+    private Long existsId;
+    private Long nonExistsId;
+    private Long dependentId;
 
     @BeforeEach
     public void setUpClient() {
-        super.setUp();
+        existsId = 1L;
+        nonExistsId = 2L;
+        dependentId = 3L;
         entity = CLIENT_ENTITY;
 
         page = new PageImpl<>(CLIENTS_ENTITY_LIST);
@@ -62,17 +65,17 @@ class ClientServiceTest extends TestsServiceAbstract{
 
         when(clientRepository.findAll((Pageable) ArgumentMatchers.any())).thenReturn(page);
 
-        when(clientRepository.findById(getExistsId())).thenReturn(Optional.of(entity));
-        when(clientRepository.findById(getNonExistsId())).thenThrow(ResourceNotFoundException.class);
+        when(clientRepository.findById(existsId)).thenReturn(Optional.of(entity));
+        when(clientRepository.findById(nonExistsId)).thenThrow(ResourceNotFoundException.class);
 
         when(modelMapper.map(entity, ClientDto.class)).thenReturn(clientDto);
         when(modelMapper.map(clientDto, Client.class)).thenReturn(entity);
 
-        when(clientRepository.getById(getExistsId())).thenReturn(entity);
+        when(clientRepository.getById(existsId)).thenReturn(entity);
 
-        doNothing().when(clientRepository).deleteById(getExistsId());
-        doThrow(ResourceNotFoundException.class).when(clientRepository).deleteById(getNonExistsId());
-        doThrow(DataBasesException.class).when(clientRepository).deleteById(getDependentId());
+        doNothing().when(clientRepository).deleteById(existsId);
+        doThrow(ResourceNotFoundException.class).when(clientRepository).deleteById(nonExistsId);
+        doThrow(DataBasesException.class).when(clientRepository).deleteById( dependentId);
     }
 
     @AfterEach
@@ -81,7 +84,6 @@ class ClientServiceTest extends TestsServiceAbstract{
     }
 
     @Test
-    @Override
     public void findAllShouldReturnPage() {
         // Arrange
         Pageable pageable = PageRequest.of(0, 10);
@@ -98,13 +100,12 @@ class ClientServiceTest extends TestsServiceAbstract{
     }
 
     @Test
-    @Override
     public void findByIdShouldReturnDtoWhenIdExixts() {
-        ClientDto result = clientService.findById(getExistsId());
+        ClientDto result = clientService.findById(existsId);
 
         // Assert
         Assertions.assertNotNull(result);
-        verify(clientRepository, times(1)).findById(getExistsId());
+        verify(clientRepository, times(1)).findById(existsId);
         Assertions.assertEquals(result.getCpf(), expectedCpf);
         Assertions.assertEquals(result.getName(), expectedName);
         Assertions.assertEquals(result.getPhoneNumber(), expectedPhoneNumber);
@@ -112,22 +113,19 @@ class ClientServiceTest extends TestsServiceAbstract{
     }
 
     @Test
-    @Override
     public void findByIdShouldThrowResourceNotFoundExceptionWhenIdDoesNotExixts() {
         // Assert
         Assertions.assertThrows(ResourceNotFoundException.class, () -> {
-            clientService.findById(getNonExistsId());
+            clientService.findById(nonExistsId);
         });
 
         // Assert
-        verify(clientRepository, times(1)).findById(getNonExistsId());
+        verify(clientRepository, times(1)).findById(nonExistsId);
     }
 
     @Test
-    @Override
     public void createShouldReturnDto() {
         // Act
-//        clientDto.setId(null);
         ClientDto result = clientService.save(clientDto);
 
         // Assert
@@ -139,30 +137,27 @@ class ClientServiceTest extends TestsServiceAbstract{
     }
 
     @Test
-    @Override
     public void deleteShouldThrowDataBasesExceptionWhenIdIsDependent() {
         Assertions.assertThrows(DataBasesException.class, () -> {
-            clientService.remove(getDependentId());
+            clientService.remove( dependentId);
         });
-        verify(clientRepository, times(1)).deleteById(getDependentId());
+        verify(clientRepository, times(1)).deleteById( dependentId);
     }
 
     @Test
-    @Override
     public void deleteShouldThrowResourceNotFoundExceptionWhenIdDoesNotExists() {
         Assertions.assertThrows(ResourceNotFoundException.class, () -> {
-            clientService.remove(getNonExistsId());
+            clientService.remove(nonExistsId);
         });
-        verify(clientRepository, times(1)).deleteById(getNonExistsId());
+        verify(clientRepository, times(1)).deleteById(nonExistsId);
     }
 
     @Test
-    @Override
     public void deleteShouldReturnNothingWhenIdExists() {
         Assertions.assertDoesNotThrow(() -> {
-            clientService.remove(getExistsId());
+            clientService.remove(existsId);
         });
-        verify(clientRepository, times(1)).deleteById(getExistsId());
+        verify(clientRepository, times(1)).deleteById(existsId);
     }
 
 //    @Test
@@ -180,17 +175,17 @@ class ClientServiceTest extends TestsServiceAbstract{
 //        entityUpdate.setPhoneNumber("(62) 91998-9673");
 //
 //
-//        when(clientRepository.getById(getExistsId())).thenReturn(entityUpdate);
+//        when(clientRepository.getById(existsId)).thenReturn(entityUpdate);
 //        when(clientRepository.save(entity)).thenReturn(entityUpdate);
 //
 //        // Act
-//        ClientDto result = clientService.update(getExistsId(), clientUpdateDto);
+//        ClientDto result = clientService.update(existsId, clientUpdateDto);
 //        // Assert
 //        Assertions.assertNotNull(result);
 //        Assertions.assertEquals(result.getCpf(), "756.394.430-30");
 ////        Assertions.assertEquals(result.getName(), "Fulano Beltrano dos Testes UPDATE");
 //        Assertions.assertEquals(result.getPhoneNumber(), "(62) 91998-9673");
 //        Assertions.assertEquals(result.getEmail(), "fulano.beltrano.testes.UPDATE@techbank.com");
-//        // Assertions.assertEquals(result.getId(), getExistsId());
+//        // Assertions.assertEquals(result.getId(), existsId);
 //    }
 }

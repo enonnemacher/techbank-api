@@ -4,6 +4,9 @@ import com.wipro.techbank.domain.AccountType;
 import com.wipro.techbank.domain.Operation;
 import com.wipro.techbank.domain.Transaction;
 import com.wipro.techbank.dtos.TransactionRequestDto;
+import com.wipro.techbank.dtos.TransactionResponseDto;
+
+import java.time.LocalDateTime;
 
 public class FactoryTransactions {
 
@@ -15,7 +18,20 @@ public class FactoryTransactions {
     public static final Transaction TRANSACTION_SPECIAL_ACCOUNT_ENTITY = createTransacionsSpecialAccountEntity();
     public static final Transaction TRANSACTION_SPECIAL_ACCOUNT_ENTITY_AFTER_SAVE = createTransacionsSpecialAccountEntityAfterSave();
 
+    public static final TransactionResponseDto TRANSACTION_RESPONSE_DTO = createTransactionsResponseDto();
+
     private static Double DEPOSIT_VALUE = 200.00;
+
+    public static TransactionResponseDto createTransactionsResponseDto() {
+        TransactionResponseDto transactionResponseDto = new TransactionResponseDto();
+        LocalDateTime createAt = LocalDateTime.of(2022, 04, 13, 0, 0);
+        transactionResponseDto.setId(1L);
+        transactionResponseDto.setCreateAt(createAt);
+        transactionResponseDto.setAccountType(AccountType.CHECKING_ACCOUNT);
+        transactionResponseDto.setOperation(Operation.DEPOSIT);
+        transactionResponseDto.setValue(DEPOSIT_VALUE);
+        return transactionResponseDto;
+    }
 
     public static TransactionRequestDto createTransactionsCheckingAccountRequestDto() {
         TransactionRequestDto transactionRequestDto = new TransactionRequestDto();
