@@ -7,7 +7,7 @@ import lombok.*;
 
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
-
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -15,8 +15,15 @@ import java.io.Serializable;
 @NoArgsConstructor
 @ToString
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class TransactionRequestDto implements Serializable {
+public class TransactionResponseOperationDto implements Serializable {
     private static final long serialVersionUID = 377217321776086460L;
+
+    private Long id;
+
+    private LocalDateTime date;
+
+    @NotNull(message = "Descrição da operação obrigatória.")
+    private Operation operation;
 
     @NotNull(message = "Valor da operação é obrigatório.")
     private Double value;
@@ -24,9 +31,18 @@ public class TransactionRequestDto implements Serializable {
     @NotNull(message = "O tipo da conta é obrigatório.")
     private AccountType accountType;
 
+    private Double balance;
 
-    public TransactionRequestDto(Transaction entity) {
+    public TransactionResponseOperationDto(Transaction entity) {
+        id = entity.getId();
+        date = entity.getCreatedAt();
+        operation = entity.getOperation();
         value = entity.getValue();
         accountType = entity.getAccountType();
+    }
+
+    public TransactionResponseOperationDto(Transaction entity, Double balance) {
+        this(entity);
+        this.balance = balance;
     }
 }
