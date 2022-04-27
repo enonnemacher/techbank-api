@@ -28,4 +28,8 @@ public class CheckingAccount extends Account  implements Serializable {
         this.client = client;
         this.creditCard = creditCard;
     }
+
+    public CheckingAccount() {
+        super();
+    }
 }

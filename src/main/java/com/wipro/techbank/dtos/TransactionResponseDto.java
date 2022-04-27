@@ -1,5 +1,6 @@
 package com.wipro.techbank.dtos;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.wipro.techbank.domain.AccountType;
 import com.wipro.techbank.domain.Operation;
 import com.wipro.techbank.domain.Transaction;
@@ -20,6 +21,7 @@ public class TransactionResponseDto implements Serializable {
 
     private Long id;
 
+    @JsonFormat(pattern = "dd-MM-yyyy")
     private LocalDateTime date;
 
     @NotNull(message = "Descrição da operação obrigatória.")

@@ -15,6 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.Optional;
 
 @Service
@@ -50,17 +51,22 @@ public class TransactionService {
         transaction.setValue(transactionDto.getValue());
         transaction.setAccountType(transactionDto.getAccountType());
 
-        if (transactionDto.getAccountType().equals(AccountType.CHECKING_ACCOUNT)) {
-            account = checkingAccountRepository.getById(accountId);
-            account.deposit(transactionDto.getValue());
-            transaction.setAccount(account);
-            transaction = transactionRepository.save(transaction);
-        } else if (transactionDto.getAccountType().equals(AccountType.ESPECIAL_ACCOUNT)) {
-            account = specialAccountRepository.getById(accountId);
-            account.deposit(transactionDto.getValue());
-            transaction.setAccount(account);
-            transaction = transactionRepository.save(transaction);
+        try {
+            if (transactionDto.getAccountType().equals(AccountType.CHECKING_ACCOUNT)) {
+                account = checkingAccountRepository.getById(accountId);
+                account.deposit(transactionDto.getValue());
+                transaction.setAccount(account);
+                transaction = transactionRepository.save(transaction);
+            } else if (transactionDto.getAccountType().equals(AccountType.SPECIAL_ACCOUNT)) {
+                account = specialAccountRepository.getById(accountId);
+                account.deposit(transactionDto.getValue());
+                transaction.setAccount(account);
+                transaction = transactionRepository.save(transaction);
+            }
+        } catch (EntityNotFoundException e) {
+            throw new ResourceNotFoundException("Entity not found");
         }
+
         assert account != null;
         return new TransactionResponseOperationDto(transaction, account.getBalance());
     }
@@ -74,21 +80,25 @@ public class TransactionService {
         transaction.setValue(dto.getValue());
         transaction.setAccountType(dto.getAccountType());
 
-        if (dto.getAccountType().equals(AccountType.CHECKING_ACCOUNT)) {
-            account = checkingAccountRepository.getById(accountId);
+        try {
+            if (dto.getAccountType().equals(AccountType.CHECKING_ACCOUNT)) {
+                account = checkingAccountRepository.getById(accountId);
 
-            if(account.getBalance() < dto.getValue()) {
-                throw new ResourceNotFoundException("Saldo insuficiente.");
+                if(account.getBalance() < dto.getValue()) {
+                    throw new ResourceNotFoundException("Saldo insuficiente.");
+                }
+                account.withdraw(dto.getValue());
+                transaction.setAccount(account);
+                transaction = transactionRepository.save(transaction);
             }
-            account.withdraw(dto.getValue());
-            transaction.setAccount(account);
-            transaction = transactionRepository.save(transaction);
-        }
-        else{
-            account = specialAccountRepository.findById(accountId).get();
-            account.withdraw(dto.getValue());
-            transaction.setAccount(account);
-            transaction = transactionRepository.save(transaction);
+            else{
+                account = specialAccountRepository.getById(accountId);
+                account.withdraw(dto.getValue());
+                transaction.setAccount(account);
+                transaction = transactionRepository.save(transaction);
+            }
+        } catch (EntityNotFoundException e) {
+            throw new ResourceNotFoundException("Entity not found");
         }
         return new TransactionResponseOperationDto(transaction, account.getBalance());
     }
