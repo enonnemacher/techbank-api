@@ -1,7 +1,9 @@
 package com.wipro.techbank.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.wipro.techbank.dtos.TransactionRequestDto;
 import com.wipro.techbank.dtos.TransactionResponseDto;
+import com.wipro.techbank.dtos.TransactionResponseOperationDto;
 import com.wipro.techbank.services.TransactionService;
 import com.wipro.techbank.services.exceptions.ResourceNotFoundException;
 import com.wipro.techbank.tests.FactoryTransactions;
@@ -16,6 +18,8 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.List;
 
@@ -40,6 +44,8 @@ class TransactionControllerTest {
 
     private PageImpl<TransactionResponseDto> page;
     private TransactionResponseDto transactionResponseDto;
+    private TransactionRequestDto transactionRequestDto;
+    private TransactionResponseOperationDto transactionResponseOperationDto;
     private long existingId;
     private long nonExistingId;
     private long depndentId;
@@ -47,6 +53,8 @@ class TransactionControllerTest {
     @BeforeEach
     void setUp() throws Exception{
         transactionResponseDto = FactoryTransactions.TRANSACTION_RESPONSE_DTO;
+        transactionRequestDto = FactoryTransactions.TRANSACTION_REQUEST_DTO;
+        transactionResponseOperationDto = FactoryTransactions.TRANSACTION_RESPONSE_OPERATION_DTO;
         page = new PageImpl<>(List.of(transactionResponseDto));
         existingId = 1L;
         nonExistingId = 2L;
@@ -57,7 +65,7 @@ class TransactionControllerTest {
         when(transactionService.findById(existingId)).thenReturn(transactionResponseDto);
         when(transactionService.findById(nonExistingId)).thenThrow(ResourceNotFoundException.class);
 
-//        when(transactionService.deposit(transactionResponseDto)).thenReturn(transactionResponseDto);
+        when(transactionService.deposit(existingId, transactionRequestDto)).thenReturn(transactionResponseOperationDto);
     }
 
     @Test
@@ -77,11 +85,21 @@ class TransactionControllerTest {
         result.andExpect(jsonPath("$.accountType").exists());
         result.andExpect(jsonPath("$.operation").exists());
         result.andExpect(jsonPath("$.createAt").exists());
+
     }
 
     @Test
-    void deposit() {
-        Assertions.assertTrue(true);
+    void deposit() throws Exception {
+        String jsonBody = objectMapper.writeValueAsString(transactionRequestDto);
+        ResultActions result = mockMvc.perform(MockMvcRequestBuilders.post("/transactions/deposits/{id}", existingId)
+                        .content(jsonBody)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON));
+        result.andExpect(status().isOk());
+        result.andExpect(jsonPath("$.id").exists());
+        result.andExpect(jsonPath("$.accountType").exists());
+        result.andExpect(jsonPath("$.operation").exists());
+        result.andExpect(jsonPath("$.createAt").exists());
     }
 
     @Test
