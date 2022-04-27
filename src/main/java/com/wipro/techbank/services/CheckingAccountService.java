@@ -29,34 +29,35 @@ public class CheckingAccountService {
     @Autowired
     private ClientRepository clientRepository;
 
-    @Autowired CreditCardRepository creditCardRepository;
+    @Autowired
+    CreditCardRepository creditCardRepository;
 
     @Autowired
     private ModelMapper modelMapper;
 
-    public List<CheckingAccountResponseDto> findAll(){
+    public List<CheckingAccountResponseDto> findAll() {
         return checkingAccountRepository.findAll()
                 .stream()
                 .map(this::toCheckingAccountDto)
                 .collect(Collectors.toList());
     }
 
-    public CheckingAccountResponseDto findById(Long id){
+    public CheckingAccountResponseDto findById(Long id) {
         Optional<CheckingAccount> optionalCheckingAccount = checkingAccountRepository.findById(id);
-        CheckingAccount checkingAccountDb = optionalCheckingAccount.orElseThrow(()->
+        CheckingAccount checkingAccountDb = optionalCheckingAccount.orElseThrow(() ->
                 new ResourceNotFoundException("Entidade não encontrada"));
         return toCheckingAccountDto(checkingAccountDb);
     }
 
     @Transactional
-    public CheckingAccountResponseDto create(CheckingAccountRequestDto checkingAccountRequestDto){
+    public CheckingAccountResponseDto create(CheckingAccountRequestDto checkingAccountRequestDto) {
         CheckingAccount checkingAccount = toCheckingAccount(checkingAccountRequestDto);
         checkingAccount = checkingAccountRepository.save(checkingAccount);
         return modelMapper.map(checkingAccount, CheckingAccountResponseDto.class);
     }
 
     @Transactional
-    public CheckingAccountResponseDto updateCheckingAccount(Long id, CheckingAccountRequestDto checkingAccountRequestDto){
+    public CheckingAccountResponseDto updateCheckingAccount(Long id, CheckingAccountRequestDto checkingAccountRequestDto) {
         try {
             CheckingAccount entity = checkingAccountRepository.getById(id);
             entity.setBalance(checkingAccountRequestDto.getBalance());
@@ -82,19 +83,19 @@ public class CheckingAccountService {
         }
     }
 
-    private CheckingAccountResponseDto toCheckingAccountDto(CheckingAccount checkingAccount){
+    private CheckingAccountResponseDto toCheckingAccountDto(CheckingAccount checkingAccount) {
         return modelMapper.map(checkingAccount, CheckingAccountResponseDto.class);
     }
 
-    public CheckingAccount toCheckingAccount(CheckingAccountRequestDto checkingAccountRequestDto){
+    public CheckingAccount toCheckingAccount(CheckingAccountRequestDto checkingAccountRequestDto) {
         if (checkingAccountRequestDto.getClient() == null) {
             throw new ResourceNotFoundException("Cliente, cadastrado, precisa ser informado");
         }
 
         try {
             Client client = clientRepository.getById(checkingAccountRequestDto.getClient().getId());
-            checkingAccountRequestDto.setClient(new ClientDto(client));
-        } catch (EntityNotFoundException e){
+            checkingAccountRequestDto.setClient(modelMapper.map(client, ClientDto.class));
+        } catch (EntityNotFoundException e) {
             throw new ResourceNotFoundException(String.format("Cliente com ID %d não foi encontrado.", checkingAccountRequestDto.getClient().getId()));
         }
 
@@ -105,7 +106,7 @@ public class CheckingAccountService {
         try {
             CreditCard creditCard = creditCardRepository.getById(checkingAccountRequestDto.getCreditCard().getId());
             checkingAccountRequestDto.setCreditCard(new CreditCardResponseDto(creditCard));
-        }catch (EntityNotFoundException e){
+        } catch (EntityNotFoundException e) {
             throw new ResourceNotFoundException(String.format("Cartão de Credito com ID %d não foi encontrado.", checkingAccountRequestDto.getCreditCard().getId()));
         }
 
@@ -117,7 +118,7 @@ public class CheckingAccountService {
             CreditCard creditCard = creditCardRepository.getById(dto.getCreditCard().getId());
             dto.setCreditCard(new CreditCardResponseDto(creditCard));
             entity.setCreditCard(creditCard);
-        }catch (EntityNotFoundException e){
+        } catch (EntityNotFoundException e) {
             throw new ResourceNotFoundException(String.format("Cartão de Credito com ID %d não foi encontrado.", dto.getCreditCard().getId()));
         }
     }
