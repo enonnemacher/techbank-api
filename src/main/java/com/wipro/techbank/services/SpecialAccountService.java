@@ -74,12 +74,13 @@ public class SpecialAccountService {
         return toSpecialAccountDto(specialAccountDb);
     }
 
-    public void remove(Long id) {
-        Optional<SpecialAccount> optionalSpecialAccount = specialAccountRepository.findById(id);
-        if (optionalSpecialAccount.isPresent()) {
+    public void remove(Long id){
+        try {
             specialAccountRepository.deleteById(id);
-        } else {
-            throw new ResourceNotFoundException("Entidade não encontrada");
+        } catch (EmptyResultDataAccessException e) {
+            throw new ResourceNotFoundException("Id " + id + " não encontrado.");
+        } catch (DataIntegrityViolationException e) {
+            throw new DataBasesException("Violação de integridade.");
         }
     }
 

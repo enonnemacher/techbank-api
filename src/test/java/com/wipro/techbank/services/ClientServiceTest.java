@@ -13,6 +13,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -33,6 +35,9 @@ class ClientServiceTest extends TestsServiceAbstract{
 
     @Mock
     private ClientRepository clientRepository;
+
+    @Mock
+    private ModelMapper modelMapper;
 
     private Client entity;
     private PageImpl<Client> page;
@@ -59,6 +64,9 @@ class ClientServiceTest extends TestsServiceAbstract{
 
         when(clientRepository.findById(getExistsId())).thenReturn(Optional.of(entity));
         when(clientRepository.findById(getNonExistsId())).thenThrow(ResourceNotFoundException.class);
+
+        when(modelMapper.map(entity, ClientDto.class)).thenReturn(clientDto);
+        when(modelMapper.map(clientDto, Client.class)).thenReturn(entity);
 
         when(clientRepository.getById(getExistsId())).thenReturn(entity);
 
@@ -166,15 +174,21 @@ class ClientServiceTest extends TestsServiceAbstract{
 //        clientUpdateDto.setPhoneNumber("(62) 91998-9673");
 //        Client entityUpdate = entity;
 //        entityUpdate.setId(1L);
+//        entityUpdate.setCpf("756.394.430-30");
+//        entityUpdate.setName("Fulano Beltrano dos Testes UPDATE");
+//        entityUpdate.setEmail("fulano.beltrano.testes.UPDATE@techbank.com");
+//        entityUpdate.setPhoneNumber("(62) 91998-9673");
 //
-//        // when(clientRepository.getById(getExistsId())).thenReturn(entityUpdate);
+//
+//        when(clientRepository.getById(getExistsId())).thenReturn(entityUpdate);
+//        when(clientRepository.save(entity)).thenReturn(entityUpdate);
 //
 //        // Act
 //        ClientDto result = clientService.update(getExistsId(), clientUpdateDto);
 //        // Assert
 //        Assertions.assertNotNull(result);
 //        Assertions.assertEquals(result.getCpf(), "756.394.430-30");
-//        Assertions.assertEquals(result.getName(), "Fulano Beltrano dos Testes UPDATE");
+////        Assertions.assertEquals(result.getName(), "Fulano Beltrano dos Testes UPDATE");
 //        Assertions.assertEquals(result.getPhoneNumber(), "(62) 91998-9673");
 //        Assertions.assertEquals(result.getEmail(), "fulano.beltrano.testes.UPDATE@techbank.com");
 //        // Assertions.assertEquals(result.getId(), getExistsId());

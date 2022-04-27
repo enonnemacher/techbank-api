@@ -11,14 +11,14 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 
 @Service
@@ -35,11 +35,10 @@ public class CheckingAccountService {
     @Autowired
     private ModelMapper modelMapper;
 
-    public List<CheckingAccountResponseDto> findAll() {
-        return checkingAccountRepository.findAll()
-                .stream()
-                .map(this::toCheckingAccountDto)
-                .collect(Collectors.toList());
+
+    public Page<CheckingAccountResponseDto> findAll(Pageable pageable) {
+        Page<CheckingAccount> checkingAccounts = checkingAccountRepository.findAll(pageable);
+        return checkingAccounts.map(this::toCheckingAccountDto);
     }
 
     public CheckingAccountResponseDto findById(Long id) {

@@ -4,10 +4,15 @@ import com.wipro.techbank.dtos.CheckingAccountRequestDto;
 import com.wipro.techbank.dtos.CheckingAccountResponseDto;
 import com.wipro.techbank.services.CheckingAccountService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import springfox.documentation.annotations.ApiIgnore;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -18,8 +23,11 @@ public class CheckingAccountController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public CheckingAccountResponseDto create(@RequestBody CheckingAccountRequestDto checkingAccount){
-        return checkingAccountService.create(checkingAccount);
+    public ResponseEntity<CheckingAccountResponseDto> create(@RequestBody CheckingAccountRequestDto checkingAccount) {
+        CheckingAccountResponseDto checkingAccountResponseDto = checkingAccountService.create(checkingAccount);
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri().path("/{id}")
+                .buildAndExpand(checkingAccountResponseDto.getId()).toUri();
+        return ResponseEntity.created(uri).body(checkingAccountResponseDto);
     }
 
     @GetMapping("/{id}")
@@ -35,8 +43,9 @@ public class CheckingAccountController {
     }
 
     @GetMapping
-    public ResponseEntity<List<CheckingAccountResponseDto>> checkingAccountsFindAll(){
-        return ResponseEntity.ok(checkingAccountService.findAll());
+    public ResponseEntity<Page<CheckingAccountResponseDto>> checkingAccountsFindAll(@ApiIgnore Pageable pageable){
+        Page<CheckingAccountResponseDto> checkingAccountResponseDtos = checkingAccountService.findAll(pageable);
+        return ResponseEntity.ok(checkingAccountResponseDtos);
     }
 
     @DeleteMapping(value = "/{id}")

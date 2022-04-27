@@ -17,11 +17,15 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.ArrayList;
@@ -82,7 +86,7 @@ class CheckingAccountServiceTest extends TestsServiceAbstract{
 
         Mockito.when(checkingAccountRepository.save(checkingAccountEntity)).thenReturn(checkingAccountEntity);
 
-        Mockito.when(checkingAccountRepository.findAll()).thenReturn(list);
+        Mockito.when(checkingAccountRepository.findAll((Pageable) ArgumentMatchers.any())).thenReturn(page);
 
         Mockito.when(checkingAccountRepository.findById(getExistsId())).thenReturn(Optional.of(checkingAccountEntity));
         Mockito.when(checkingAccountRepository.findById(getNonExistsId())).thenThrow(ResourceNotFoundException.class);
@@ -105,13 +109,14 @@ class CheckingAccountServiceTest extends TestsServiceAbstract{
     @Override
     public void findAllShouldReturnPage() {
         int expectedLength = 1;
+        Pageable pageable = PageRequest.of(0, 10);
         // Act
-        List<CheckingAccountResponseDto> result = checkingAccountService.findAll();
+        Page<CheckingAccountResponseDto> result = checkingAccountService.findAll(pageable);
 
         // Assert
         Assertions.assertNotNull(result);
-        Assertions.assertEquals(result.size(), expectedLength);
-        verify(checkingAccountRepository, times(1)).findAll();
+        Assertions.assertEquals(result.getSize(), expectedLength);
+        verify(checkingAccountRepository, times(1)).findAll(pageable);
     }
 
     @Test
