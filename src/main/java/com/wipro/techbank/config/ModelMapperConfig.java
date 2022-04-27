@@ -1,4 +1,4 @@
-package com.wipro.techbank.core;
+package com.wipro.techbank.config;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;

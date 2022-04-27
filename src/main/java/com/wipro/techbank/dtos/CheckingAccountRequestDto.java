@@ -1,6 +1,5 @@
 package com.wipro.techbank.dtos;
 
-import com.wipro.techbank.domain.CreditCard;
 import lombok.*;
 
 import java.io.Serializable;

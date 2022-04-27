@@ -56,6 +56,10 @@ public class ClientService {
     }
 
     private void copyDtoToEntity(ClientDto clientDto, Client client) {
+        if (clientDto.getId() != null) {
+            client.setId(clientDto.getId());
+        }
+
         client.setName(clientDto.getName());
         client.setCpf(clientDto.getCpf());
         client.setPhoneNumber(clientDto.getPhoneNumber());

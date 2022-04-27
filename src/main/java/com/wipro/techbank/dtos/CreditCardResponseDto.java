@@ -33,11 +33,15 @@ public class CreditCardResponseDto implements Serializable {
     private Double usedLimit;
 
     public CreditCardResponseDto(CreditCard entity) {
+        if (entity != null) {
         id = entity.getId();
         cardNumber = entity.getCardNumber();
         expirationDate = entity.getExpirationDate();
         securityCode = entity.getSecurityCode();
         limitCredit = entity.getLimitCredit();
         usedLimit = entity.getUsedLimit();
+        }
     }
+
+
 }

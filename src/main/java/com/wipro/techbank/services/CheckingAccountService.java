@@ -86,7 +86,7 @@ public class CheckingAccountService {
         return modelMapper.map(checkingAccount, CheckingAccountResponseDto.class);
     }
 
-    private CheckingAccount toCheckingAccount(CheckingAccountRequestDto checkingAccountRequestDto){
+    public CheckingAccount toCheckingAccount(CheckingAccountRequestDto checkingAccountRequestDto){
         if (checkingAccountRequestDto.getClient() == null) {
             throw new ResourceNotFoundException("Cliente, cadastrado, precisa ser informado");
         }

@@ -67,7 +67,7 @@ public class TransactionService {
 
     @Transactional
     public TransactionResponseOperationDto withdraw(Long accountId, TransactionRequestDto dto) {
-        Account account = null;
+        Account account;
         Transaction transaction = new Transaction();
 
         transaction.setOperation(Operation.WITHDRAW);
@@ -92,10 +92,4 @@ public class TransactionService {
         }
         return new TransactionResponseOperationDto(transaction, account.getBalance());
     }
-
-    private void copyDtoToEntity(TransactionResponseDto dto, Transaction entity) {
-        entity.setOperation(dto.getOperation());
-        entity.setValue(dto.getValue());
-    }
-
 }

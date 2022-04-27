@@ -35,6 +35,8 @@ public class SpecialAccount extends Account  implements Serializable {
     private Double creditSpecial;
 
     private Double creditSpecialUsed = 0.0;
+
+
     @Override
     public void withdraw(Double value) {
         if (value <= this.getBalance()) {

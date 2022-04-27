@@ -3,6 +3,8 @@ package com.wipro.techbank.controllers;
 
 
 import com.wipro.techbank.dtos.SpecialAccountDto;
+import com.wipro.techbank.dtos.SpecialAccountRequestDto;
+import com.wipro.techbank.dtos.SpecialAccountResponseDto;
 import com.wipro.techbank.services.SpecialAccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -21,11 +23,11 @@ public class SpecialAccountController {
     private SpecialAccountService specialAccountService;
 
     @PostMapping
-    public ResponseEntity<SpecialAccountDto> create(@RequestBody SpecialAccountDto specialAccountDto) {
-        SpecialAccountDto specialAccountDto2 = specialAccountService.create(specialAccountDto);
+    public ResponseEntity<SpecialAccountResponseDto> create(@RequestBody SpecialAccountRequestDto specialAccountRequestDto) {
+        SpecialAccountResponseDto specialAccountResponseDto = specialAccountService.create(specialAccountRequestDto);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri().path("/{id}")
-                .buildAndExpand(specialAccountDto.getId()).toUri();
-        return ResponseEntity.created(uri).body(specialAccountDto2);
+                .buildAndExpand(specialAccountResponseDto.getId()).toUri();
+        return ResponseEntity.created(uri).body(specialAccountResponseDto);
     }
 
     @GetMapping
@@ -35,7 +37,7 @@ public class SpecialAccountController {
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<SpecialAccountDto> findById(@PathVariable Long id) {
+    public ResponseEntity<SpecialAccountResponseDto> findById(@PathVariable Long id) {
         return ResponseEntity.ok(specialAccountService.findById(id));
     }
 

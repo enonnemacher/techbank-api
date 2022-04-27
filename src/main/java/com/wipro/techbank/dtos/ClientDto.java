@@ -29,6 +29,6 @@ public class ClientDto {
         name = entity.getName();
         cpf = entity.getCpf();
         phoneNumber = entity.getPhoneNumber();
-        email = entity.getPhoneNumber();
+        email = entity.getEmail();
     }
 }
