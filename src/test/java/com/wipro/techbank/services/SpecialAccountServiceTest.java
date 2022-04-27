@@ -156,7 +156,7 @@ class SpecialAccountServiceTest extends TestsServiceAbstract{
     @Override
     public void deleteShouldThrowDataBasesExceptionWhenIdIsDependent() {
         Assertions.assertThrows(DataBasesException.class, () -> {
-            specialAccountService.remove(getDependentId());
+            specialAccountService.delete(getDependentId());
         });
         verify(specialAccountRepository, times(1)).deleteById(getDependentId());
     }
@@ -165,7 +165,7 @@ class SpecialAccountServiceTest extends TestsServiceAbstract{
     @Override
     public void deleteShouldThrowResourceNotFoundExceptionWhenIdDoesNotExists() {
         Assertions.assertThrows(ResourceNotFoundException.class, () -> {
-            specialAccountService.remove(getNonExistsId());
+            specialAccountService.delete(getNonExistsId());
         });
         verify(specialAccountRepository, times(1)).deleteById(getNonExistsId());
     }
@@ -174,7 +174,7 @@ class SpecialAccountServiceTest extends TestsServiceAbstract{
     @Override
     public void deleteShouldReturnNothingWhenIdExists() {
         Assertions.assertDoesNotThrow(() -> {
-            specialAccountService.remove(getExistsId());
+            specialAccountService.delete(getExistsId());
         });
         verify(specialAccountRepository, times(1)).deleteById(getExistsId());
     }

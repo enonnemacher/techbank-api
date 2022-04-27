@@ -1,9 +1,8 @@
 package com.wipro.techbank.services;
 
-import com.wipro.techbank.domain.CheckingAccount;
 import com.wipro.techbank.domain.Client;
 import com.wipro.techbank.domain.SpecialAccount;
-import com.wipro.techbank.dtos.CheckingAccountResponseDto;
+import com.wipro.techbank.dtos.SpecialAccountDto;
 import com.wipro.techbank.dtos.SpecialAccountRequestDto;
 import com.wipro.techbank.dtos.SpecialAccountResponseDto;
 import com.wipro.techbank.repositories.ClientRepository;
@@ -41,6 +40,11 @@ public class SpecialAccountService {
                 .collect(Collectors.toList());
     }
 
+    public Page<SpecialAccountDto> findAllPaged(Pageable pageable) {
+        Page<SpecialAccount> specialAccounts = specialAccountRepository.findAll(pageable);
+        return specialAccounts.map(SpecialAccountDto::new);
+    }
+
     public SpecialAccountResponseDto findById(Long id){
         Optional<SpecialAccount> optionalSpecialAccount = specialAccountRepository.findById(id);
         SpecialAccount specialAccountDb = optionalSpecialAccount.orElseThrow(()->
@@ -69,13 +73,13 @@ public class SpecialAccountService {
         return toSpecialAccountDto(specialAccountDb);
     }
 
-    public void remove(Long id) {
+    public void delete(Long id){
         try {
             specialAccountRepository.deleteById(id);
         } catch (EmptyResultDataAccessException e) {
-            throw new ResourceNotFoundException("Id not found " + id);
+            throw new ResourceNotFoundException("Id " + id + " não encontrado.");
         } catch (DataIntegrityViolationException e) {
-            throw new DataBasesException("Integrity violation");
+            throw new DataBasesException("Violação de integridade.");
         }
     }
 

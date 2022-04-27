@@ -10,6 +10,7 @@ import java.util.Calendar;
 
 import static com.wipro.techbank.Utils.Utils.*;
 
+
 @Entity
 @Table(name = "tb_credit_card")
 @Getter
@@ -58,4 +59,3 @@ public class CreditCard implements Serializable {
 
 
 }
-
