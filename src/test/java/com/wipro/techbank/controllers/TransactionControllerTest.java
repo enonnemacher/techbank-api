@@ -1,5 +1,6 @@
 package com.wipro.techbank.controllers;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wipro.techbank.dtos.TransactionRequestDto;
 import com.wipro.techbank.dtos.TransactionResponseDto;
@@ -103,7 +104,12 @@ class TransactionControllerTest {
     }
 
     @Test
-    void withdraw() {
-        Assertions.assertTrue(true);
+    void withdraw() throws Exception {
+        String jsonBody = objectMapper.writeValueAsString(transactionRequestDto);
+        ResultActions result = mockMvc.perform(MockMvcRequestBuilders.post("/transactions/withdrawals/{id}", existingId)
+                .content(jsonBody)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON));
+        result.andExpect(status().isOk());
     }
 }
