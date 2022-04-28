@@ -48,26 +48,20 @@ public class SpecialAccountService {
     public SpecialAccountResponseDto findById(Long id) {
         Optional<SpecialAccount> optionalSpecialAccount = specialAccountRepository.findById(id);
         SpecialAccount specialAccountDb = optionalSpecialAccount.orElseThrow(() ->
-                new ResourceNotFoundException("Entidade não encontrada"));
+                new ResourceNotFoundException("Entity not found."));
         return toSpecialAccountDto(specialAccountDb);
     }
 
     public SpecialAccountResponseDto create(SpecialAccountRequestDto specialAccountRequestDto) {
-        Long idClient = specialAccountRequestDto.getClient().getId();
-        Optional<Client> client = clientRepository.findById(idClient);
-        if (!client.isPresent()) {
-            throw new ResourceNotFoundException("Entidade não encontrada");
-        }
         SpecialAccount specialAccount = toSpecialAccount(specialAccountRequestDto);
-        specialAccountRepository.save(specialAccount);
-        return toSpecialAccountDto(specialAccount);
-
+        specialAccount = specialAccountRepository.save(specialAccount);
+        return modelMapper.map(specialAccount, SpecialAccountResponseDto.class);
     }
 
     public SpecialAccountResponseDto updateSpecialAccount(Long id, SpecialAccountRequestDto specialAccountRequestDto) {
         Optional<SpecialAccount> optionalSpecialAccountDb = specialAccountRepository.findById(id);
         SpecialAccount specialAccountDb = specialAccountRepository.findById(id).orElseThrow(() ->
-                new ResourceNotFoundException("Entidade não econtrada."));
+                new ResourceNotFoundException("Entity not found."));
 
         BeanUtils.copyProperties(specialAccountRequestDto, specialAccountDb);
         specialAccountRepository.save(specialAccountDb);
@@ -78,9 +72,9 @@ public class SpecialAccountService {
         try {
             specialAccountRepository.deleteById(id);
         } catch (EmptyResultDataAccessException e) {
-            throw new ResourceNotFoundException("Id " + id + " não encontrado.");
+            throw new ResourceNotFoundException("Id " + id + " not found.");
         } catch (DataIntegrityViolationException e) {
-            throw new DataBasesException("Violação de integridade.");
+            throw new DataBasesException("Integrity violation.");
         }
     }
 
@@ -89,26 +83,26 @@ public class SpecialAccountService {
     }
 
     private SpecialAccount toSpecialAccount(SpecialAccountRequestDto specialAccountRequestDto) {
-        if (specialAccountRequestDto.getClient().equals(null)) {
-            throw new ResourceNotFoundException("Cliente, cadastrado, precisa ser informado");
+        if (specialAccountRequestDto.getClient() == null) {
+            throw new ResourceNotFoundException("Client not found.");
         }
 
         try {
             Client client = clientRepository.getById(specialAccountRequestDto.getClient().getId());
             specialAccountRequestDto.setClient(client);
-        } catch (EntityNotFoundException e) {
-            throw new ResourceNotFoundException(String.format("Cliente com ID %d não foi encontrado.", specialAccountRequestDto.getClient().getId()));
+        } catch (javax.persistence.EntityNotFoundException | org.modelmapper.MappingException | org.hibernate.exception.ConstraintViolationException e) {
+            throw new ResourceNotFoundException(String.format("Client with ID %d not found.", specialAccountRequestDto.getClient().getId()));
         }
 
-        if (specialAccountRequestDto.getCreditCard().equals(null)) {
-            throw new ResourceNotFoundException("Cartão de Credito, cadastrado, precisa ser informado.");
+        if (specialAccountRequestDto.getCreditCard() == null) {
+            throw new ResourceNotFoundException("Credit card not found.");
         }
 
         try {
             CreditCard creditCard = creditCardRepository.getById(specialAccountRequestDto.getCreditCard().getId());
             specialAccountRequestDto.setCreditCard(creditCard);
-        } catch (EntityNotFoundException e) {
-            throw new ResourceNotFoundException(String.format("Cartão de Credito com ID %d não foi encontrado.", specialAccountRequestDto.getCreditCard().getId()));
+        } catch (javax.persistence.EntityNotFoundException e) {
+            throw new ResourceNotFoundException(String.format("Credit card ID %d not found.", specialAccountRequestDto.getCreditCard().getId()));
         }
 
         return modelMapper.map(specialAccountRequestDto, SpecialAccount.class);

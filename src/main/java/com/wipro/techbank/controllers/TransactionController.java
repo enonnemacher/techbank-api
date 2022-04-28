@@ -1,8 +1,7 @@
 package com.wipro.techbank.controllers;
 
-import com.wipro.techbank.dtos.TransactionRequestDto;
-import com.wipro.techbank.dtos.TransactionResponseDto;
-import com.wipro.techbank.dtos.TransactionResponseOperationDto;
+import com.wipro.techbank.domain.Account;
+import com.wipro.techbank.dtos.*;
 import com.wipro.techbank.services.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -10,6 +9,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/transactions")
@@ -39,5 +40,10 @@ public class TransactionController {
     public ResponseEntity<TransactionResponseOperationDto> withdraw(@PathVariable Long id, @RequestBody TransactionRequestDto dto){
         TransactionResponseOperationDto transactionResponseDto = transactionService.withdraw(id, dto);
         return ResponseEntity.ok().body(transactionResponseDto);
+    }
+
+    @GetMapping(value = "/accounts/{id}/extracts")
+    public ResponseEntity<List<TransactionResponseExtractDto>> extract(@PathVariable Long id) {
+        return ResponseEntity.ok().body(transactionService.extract(id));
     }
 }

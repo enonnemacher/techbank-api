@@ -42,7 +42,6 @@ public class SpecialAccountController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> specialAccountDelete(@PathVariable Long id) {
-        System.out.println("ID: " + id);
         specialAccountService.remove(id);
         return ResponseEntity.noContent().build();
     }

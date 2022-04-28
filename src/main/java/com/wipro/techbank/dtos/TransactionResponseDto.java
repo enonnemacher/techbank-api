@@ -22,7 +22,7 @@ public class TransactionResponseDto implements Serializable {
     private Long id;
 
     @JsonFormat(pattern = "dd-MM-yyyy")
-    private LocalDateTime createAt;
+    private LocalDateTime createdAt;
 
     @NotNull(message = "Descrição da operação obrigatória.")
     private Operation operation;
@@ -35,7 +35,7 @@ public class TransactionResponseDto implements Serializable {
 
     public TransactionResponseDto(Transaction entity) {
         id = entity.getId();
-        createAt = entity.getCreatedAt();
+        createdAt = entity.getCreatedAt();
         operation = entity.getOperation();
         value = entity.getValue();
         accountType = entity.getAccountType();

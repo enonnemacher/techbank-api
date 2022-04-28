@@ -20,7 +20,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.List;
 
@@ -85,7 +84,7 @@ class TransactionControllerTest {
         result.andExpect(jsonPath("$.id").exists());
         result.andExpect(jsonPath("$.accountType").exists());
         result.andExpect(jsonPath("$.operation").exists());
-        result.andExpect(jsonPath("$.createAt").exists());
+        result.andExpect(jsonPath("$.createdAt").exists());
 
     }
 
@@ -100,7 +99,7 @@ class TransactionControllerTest {
         result.andExpect(jsonPath("$.id").exists());
         result.andExpect(jsonPath("$.accountType").exists());
         result.andExpect(jsonPath("$.operation").exists());
-        result.andExpect(jsonPath("$.createAt").exists());
+        result.andExpect(jsonPath("$.createdAt").exists());
     }
 
     @Test

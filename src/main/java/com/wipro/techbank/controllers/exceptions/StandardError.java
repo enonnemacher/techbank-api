@@ -15,7 +15,6 @@ import java.time.Instant;
 public class StandardError {
     private static final long serialVersionUID = 4386240649033540624L;
 
-    @JsonFormat(pattern = "dd-MM-yyyy hh-mm-ss")
     private Instant timestamp;
     private Integer status;
     private String error;

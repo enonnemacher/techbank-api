@@ -1,14 +1,12 @@
 package com.wipro.techbank.services;
 
-
 import com.wipro.techbank.domain.*;
-import com.wipro.techbank.dtos.TransactionRequestDto;
-import com.wipro.techbank.dtos.TransactionResponseDto;
-import com.wipro.techbank.dtos.TransactionResponseOperationDto;
+import com.wipro.techbank.dtos.*;
 import com.wipro.techbank.repositories.CheckingAccountRepository;
 import com.wipro.techbank.repositories.SpecialAccountRepository;
 import com.wipro.techbank.repositories.TransactionRepository;
 import com.wipro.techbank.services.exceptions.ResourceNotFoundException;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,7 +14,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class TransactionService {
@@ -29,6 +29,9 @@ public class TransactionService {
 
     @Autowired
     private SpecialAccountRepository specialAccountRepository;
+
+    @Autowired
+    private ModelMapper modelMapper;
 
     public Page<TransactionResponseDto> findAllPaged(Pageable pageable) {
         Page<Transaction> operations = transactionRepository.findAll(pageable);
@@ -85,7 +88,7 @@ public class TransactionService {
                 account = checkingAccountRepository.getById(accountId);
 
                 if(account.getBalance() < dto.getValue()) {
-                    throw new ResourceNotFoundException("Saldo insuficiente.");
+                    throw new ResourceNotFoundException("Insufficient funds.");
                 }
                 account.withdraw(dto.getValue());
                 transaction.setAccount(account);
@@ -98,8 +101,16 @@ public class TransactionService {
                 transaction = transactionRepository.save(transaction);
             }
         } catch (EntityNotFoundException e) {
-            throw new ResourceNotFoundException("Entity not found");
+            throw new ResourceNotFoundException("Entity not found.");
         }
         return new TransactionResponseOperationDto(transaction, account.getBalance());
     }
+
+    public List<TransactionResponseExtractDto> extract(Long id) {
+        List<Transaction> transactions = transactionRepository.findByAccountId(id);
+        return transactions.stream()
+                .map(item -> modelMapper.map(item, TransactionResponseExtractDto.class))
+                .collect(Collectors.toList());
+    }
+
 }

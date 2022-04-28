@@ -29,7 +29,7 @@ public class FactoryTransactions {
         TransactionResponseDto transactionResponseDto = new TransactionResponseDto();
         LocalDateTime createAt = LocalDateTime.of(2022, 04, 13, 0, 0);
         transactionResponseDto.setId(1L);
-        transactionResponseDto.setCreateAt(createAt);
+        transactionResponseDto.setCreatedAt(createAt);
         transactionResponseDto.setAccountType(AccountType.CHECKING_ACCOUNT);
         transactionResponseDto.setOperation(Operation.DEPOSIT);
         transactionResponseDto.setValue(DEPOSIT_VALUE);
@@ -40,7 +40,7 @@ public class FactoryTransactions {
         TransactionResponseOperationDto transactionResponseOperationDto = new TransactionResponseOperationDto();
         LocalDateTime createAt = LocalDateTime.of(2022, 04, 13, 0, 0);
         transactionResponseOperationDto.setId(1L);
-        transactionResponseOperationDto.setCreateAt(createAt);
+        transactionResponseOperationDto.setCreatedAt(createAt);
         transactionResponseOperationDto.setAccountType(AccountType.CHECKING_ACCOUNT);
         transactionResponseOperationDto.setOperation(Operation.DEPOSIT);
         transactionResponseOperationDto.setValue(DEPOSIT_VALUE);
