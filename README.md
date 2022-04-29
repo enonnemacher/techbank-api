@@ -43,7 +43,7 @@ Para a solução deste problema apresentado, desenvolvemos uma API, utilizando a
 
 Abaixo passo a passo de como consumir a api em sua máquina:
 
-* Clonar o repositório em sua máquina;
+* Clonar o repositório em sua máquina, link https://github.com/enonnemacher/techbank-api.git;
 * Importar o projeto preferencialmente utilizando a IDE Intellij;
 * Aguardar o Maven importar as dependências;
 * Habilitar o lombok;
