@@ -21,28 +21,11 @@ public class SpecialAccountDto {
     private Long id;
 
     private Client client;
+
     private Double balance;
 
     private Double creditSpecial;
 
     private CreditCard creditCard;
-
-//    private Double creditSpecialUsed;
-
-
-    public SpecialAccountDto(SpecialAccount specialAccount) {
-        id = specialAccount.getId();
-        client = specialAccount.getClient();
-        balance = specialAccount.getBalance();
-        creditSpecial = specialAccount.getCreditSpecial();
-        creditCard = specialAccount.getCreditCard();
-
-//        creditSpecialUsed = specialAccount.getCreditSpecialUsed();
-    }
-
-//    public SpecialAccountDto(SpecialAccount entity, List<Client> clients) {
-//        this(entity);
-//        clients.forEach(client -> this.clients.add(new ClientDto(client)));
-//    }
 
 }
