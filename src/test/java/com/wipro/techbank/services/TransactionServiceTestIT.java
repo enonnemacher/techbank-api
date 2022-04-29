@@ -1,15 +1,12 @@
 package com.wipro.techbank.services;
 
 import com.wipro.techbank.domain.AccountType;
-import com.wipro.techbank.domain.Operation;
 import com.wipro.techbank.domain.SpecialAccount;
 import com.wipro.techbank.dtos.TransactionRequestDto;
 import com.wipro.techbank.dtos.TransactionResponseExtractDto;
 import com.wipro.techbank.dtos.TransactionResponseOperationDto;
-import com.wipro.techbank.repositories.CheckingAccountRepository;
 import com.wipro.techbank.repositories.SpecialAccountRepository;
 import com.wipro.techbank.services.exceptions.ResourceNotFoundException;
-import com.wipro.techbank.tests.FactoryTransactions;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @SpringBootTest
@@ -26,9 +22,6 @@ public class TransactionServiceTestIT{
 
     @Autowired
     private TransactionService transactionService;
-
-    @Autowired
-    private CheckingAccountRepository checkingAccountRepository;
 
     @Autowired
     private SpecialAccountRepository specialAccountRepository;

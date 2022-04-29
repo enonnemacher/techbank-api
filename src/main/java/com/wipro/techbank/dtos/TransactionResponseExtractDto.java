@@ -19,6 +19,7 @@ import java.time.LocalDateTime;
 public class TransactionResponseExtractDto implements Serializable {
     private static final long serialVersionUID = 3351126276354159130L;
 
+    @JsonFormat(pattern = "dd-MM-yyyy")
     private LocalDateTime createdAt;
 
     @NotNull(message = "Descrição da operação obrigatória.")
