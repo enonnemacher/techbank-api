@@ -47,7 +47,7 @@ Abaixo passo a passo de como consumir a api em sua máquina:
 * Importar o projeto preferencialmente utilizando a IDE Intellij;
 * Aguardar o Maven importar as dependências;
 * Habilitar o lombok;
-* Alterar a senha do banco de dados no arquivo application.properties, na linha spring.datasource.password=;
+* Alterar para seus dados o usuário e senha do banco de dados no arquivo application.properties, nas linhas spring.datasource.username= e spring.datasource.password=;
 * Instalar o MySQL Server e também o workbench;
 * Iniciar a aplicação;
 * Colar o link http://localhost:8080/swagger-ui/#/ no seu navegador para acessar a documentação da api via Swagger:
