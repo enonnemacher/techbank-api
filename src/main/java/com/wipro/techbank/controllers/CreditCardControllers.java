@@ -3,6 +3,8 @@ package com.wipro.techbank.controllers;
 import com.wipro.techbank.dtos.CreditCardResponseDto;
 import com.wipro.techbank.dtos.CreditCardRequestDto;
 import com.wipro.techbank.services.CreditCardService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -15,12 +17,14 @@ import java.net.URI;
 
 @RestController
 @RequestMapping("/credit-cards")
+@Api(value = "Credit Card", tags = "Credit Card")
 public class CreditCardControllers {
 
     @Autowired
     private CreditCardService creditCardService;
 
     @PostMapping
+    @ApiOperation(value = "Create Credit Card", tags = "Credit Card")
     public ResponseEntity<CreditCardResponseDto> create(@RequestBody CreditCardRequestDto creditCardRequestDto) {
         CreditCardResponseDto creditCardResponseDto = creditCardService.create(creditCardRequestDto);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri().path("/{id}")
