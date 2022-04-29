@@ -21,7 +21,6 @@ public class TransactionResponseDto implements Serializable {
 
     private Long id;
 
-    @JsonFormat(pattern = "dd-MM-yyyy")
     private LocalDateTime createdAt;
 
     @NotNull(message = "Descrição da operação obrigatória.")
