@@ -16,6 +16,10 @@ pois em conversa definimos que cada conta bancária necessita de um cliente. Al�
 crédito associado a alguma das contas. A classe gerencia conta, é a classe main, responsável por gerenciar
 as operações do menu, direcionando as funções para determinadas classes conforme escolha do usuário.
 
+Abaixo uma imagem do diagrama ER do banco de dados MySQL:
+
+![diagrama](https://user-images.githubusercontent.com/45982271/166075466-c95019e9-2f2e-4b9a-81e5-5f74974e9ff0.png)
+
 Abaixo uma descrição dos endpoints de cada classe:
 
 * Funções cliente: Adicionar/atualizar dados/excluir/mostrar todos/mostrar por ID;
