@@ -38,7 +38,7 @@ public class ClientService {
 
     public ClientDto findById(Long id) {
         Optional<Client> client = clientRepository.findById(id);
-        Client entity = client.orElseThrow(() -> new ResourceNotFoundException("Entidade não encontrada."));
+        Client entity = client.orElseThrow(() -> new ResourceNotFoundException("Entity not found."));
         return copyEntityToDTo(client.get());
     }
 
@@ -56,9 +56,9 @@ public class ClientService {
         try {
             clientRepository.deleteById(id);
         } catch (EmptyResultDataAccessException e) {
-            throw new ResourceNotFoundException("Id " + id + " não encontrado.");
+            throw new ResourceNotFoundException("Id " + id + " not found.");
         } catch (DataIntegrityViolationException e) {
-            throw new DataBasesException("Violação de integridade");
+            throw new DataBasesException("Integrity violation.");
         }
     }
 

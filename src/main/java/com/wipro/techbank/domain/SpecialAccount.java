@@ -39,6 +39,7 @@ public class SpecialAccount extends Account  implements Serializable {
 
     @Override
     public void withdraw(Double value) {
+
         if (value <= this.getBalance()) {
             this.setBalance(this.getBalance() - value);
 
@@ -55,14 +56,31 @@ public class SpecialAccount extends Account  implements Serializable {
     @Override
     public void deposit(Double value) {
 
-        if(this.getCreditSpecialUsed() <= 0d) {
-            this.setBalance(this.getBalance() + value);
-        }else{
-            Double valueToDeposit = this.getCreditSpecialUsed() - value;
-            this.setCreditSpecialUsed(this.getCreditSpecialUsed() - value);
-            if(valueToDeposit >= 0){
-                this.setBalance(this.getBalance() + (valueToDeposit));
+        if (this.creditSpecialUsed > 0) {
+            if (this.creditSpecialUsed < value) {
+                value = value - this.creditSpecialUsed;
+                this.creditSpecialUsed = 0.00;
+                super.setBalance(value);
+            } else if (this.creditSpecialUsed > value) {
+                this.creditSpecialUsed -= value;
+                super.setBalance(-this.creditSpecialUsed);
+            } else if (this.creditSpecialUsed.equals(value)) {
+                this.creditSpecialUsed = 0.00;
+                super.setBalance(0.00);
             }
+        } else {
+            super.deposit(value);
         }
+
+
+//        if(this.getCreditSpecialUsed() <= 0d) {
+//            this.setBalance(this.getBalance() + value);
+//        }else{
+//            Double valueToDeposit = this.getCreditSpecialUsed() - value;
+//            this.setCreditSpecialUsed(this.getCreditSpecialUsed() - value);
+//            if(valueToDeposit >= 0){
+//                this.setBalance(this.getBalance() + (valueToDeposit));
+//            }
+//        }
     }
 }

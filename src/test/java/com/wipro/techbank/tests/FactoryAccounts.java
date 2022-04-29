@@ -22,6 +22,10 @@ public class FactoryAccounts {
 
     public static final CheckingAccount CHECKING_ACCOUNT_GET_BY_ID_ENTITY = createCheckingAccountGetById();
 
+    public static final SpecialAccount SPECIAL_ACCOUNT_ENTITY = createSpecialAccount();
+
+    public static final SpecialAccount SPECIAL_ACCOUNT_GET_BY_ID_ENTITY = createSpecialAccountGetById();
+
 
     public static CheckingAccount createCheckingAccount() {
         return new CheckingAccount(BALANCE, CLIENT_ENTITY, CREDIT_CARD_TEST);
@@ -51,11 +55,6 @@ public class FactoryAccounts {
         return checkingAccountResponseDto;
     }
 
-    public static SpecialAccount createSpecialAccount() {
-
-        return new SpecialAccount(CLIENT_ENTITY, CREDIT_CARD_TEST, SPECIAL_CREDIT, 0.00);
-    }
-
     public static CheckingAccountRequestDto createCheckingAccountRequestDto() {
         CheckingAccountRequestDto checkingAccountRequestDto = new CheckingAccountRequestDto();
         checkingAccountRequestDto.setId(CHECKING_ACCOUNT_ID);
@@ -64,6 +63,16 @@ public class FactoryAccounts {
         checkingAccountRequestDto.setCreditCard(CREDIT_CARD_RESPONSE_DTO_TEST);
         checkingAccountRequestDto.setBalance(BALANCE);
         return checkingAccountRequestDto;
+    }
+
+    public static SpecialAccount createSpecialAccount() {
+        return new SpecialAccount(CLIENT_ENTITY, CREDIT_CARD_TEST, SPECIAL_CREDIT, 0.00);
+    }
+
+    public static SpecialAccount createSpecialAccountGetById() {
+        SpecialAccount account = SPECIAL_ACCOUNT_ENTITY;
+        account.setId(SPECIAL_ACCOUNT_ID);
+        return account;
     }
 
     public static SpecialAccountResponseDto createSpecialAccountResponseDto() {

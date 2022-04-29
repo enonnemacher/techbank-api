@@ -1,21 +1,22 @@
 package com.wipro.techbank.services;
 
-
 import com.wipro.techbank.domain.*;
-import com.wipro.techbank.dtos.TransactionRequestDto;
-import com.wipro.techbank.dtos.TransactionResponseDto;
-import com.wipro.techbank.dtos.TransactionResponseOperationDto;
+import com.wipro.techbank.dtos.*;
 import com.wipro.techbank.repositories.CheckingAccountRepository;
 import com.wipro.techbank.repositories.SpecialAccountRepository;
 import com.wipro.techbank.repositories.TransactionRepository;
 import com.wipro.techbank.services.exceptions.ResourceNotFoundException;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityNotFoundException;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class TransactionService {
@@ -28,6 +29,9 @@ public class TransactionService {
 
     @Autowired
     private SpecialAccountRepository specialAccountRepository;
+
+    @Autowired
+    private ModelMapper modelMapper;
 
     public Page<TransactionResponseDto> findAllPaged(Pageable pageable) {
         Page<Transaction> operations = transactionRepository.findAll(pageable);
@@ -50,17 +54,22 @@ public class TransactionService {
         transaction.setValue(transactionDto.getValue());
         transaction.setAccountType(transactionDto.getAccountType());
 
-        if (transactionDto.getAccountType().equals(AccountType.CHECKING_ACCOUNT)) {
-            account = checkingAccountRepository.getById(accountId);
-            account.deposit(transactionDto.getValue());
-            transaction.setAccount(account);
-            transaction = transactionRepository.save(transaction);
-        } else if (transactionDto.getAccountType().equals(AccountType.ESPECIAL_ACCOUNT)) {
-            account = specialAccountRepository.getById(accountId);
-            account.deposit(transactionDto.getValue());
-            transaction.setAccount(account);
-            transaction = transactionRepository.save(transaction);
+        try {
+            if (transactionDto.getAccountType().equals(AccountType.CHECKING_ACCOUNT)) {
+                account = checkingAccountRepository.getById(accountId);
+                account.deposit(transactionDto.getValue());
+                transaction.setAccount(account);
+                transaction = transactionRepository.save(transaction);
+            } else if (transactionDto.getAccountType().equals(AccountType.SPECIAL_ACCOUNT)) {
+                account = specialAccountRepository.getById(accountId);
+                account.deposit(transactionDto.getValue());
+                transaction.setAccount(account);
+                transaction = transactionRepository.save(transaction);
+            }
+        } catch (EntityNotFoundException e) {
+            throw new ResourceNotFoundException("Entity not found");
         }
+
         assert account != null;
         return new TransactionResponseOperationDto(transaction, account.getBalance());
     }
@@ -74,22 +83,34 @@ public class TransactionService {
         transaction.setValue(dto.getValue());
         transaction.setAccountType(dto.getAccountType());
 
-        if (dto.getAccountType().equals(AccountType.CHECKING_ACCOUNT)) {
-            account = checkingAccountRepository.getById(accountId);
+        try {
+            if (dto.getAccountType().equals(AccountType.CHECKING_ACCOUNT)) {
+                account = checkingAccountRepository.getById(accountId);
 
-            if(account.getBalance() < dto.getValue()) {
-                throw new ResourceNotFoundException("Saldo insuficiente.");
+                if(account.getBalance() < dto.getValue()) {
+                    throw new ResourceNotFoundException("Insufficient funds.");
+                }
+                account.withdraw(dto.getValue());
+                transaction.setAccount(account);
+                transaction = transactionRepository.save(transaction);
             }
-            account.withdraw(dto.getValue());
-            transaction.setAccount(account);
-            transaction = transactionRepository.save(transaction);
-        }
-        else{
-            account = specialAccountRepository.findById(accountId).get();
-            account.withdraw(dto.getValue());
-            transaction.setAccount(account);
-            transaction = transactionRepository.save(transaction);
+            else{
+                account = specialAccountRepository.getById(accountId);
+                account.withdraw(dto.getValue());
+                transaction.setAccount(account);
+                transaction = transactionRepository.save(transaction);
+            }
+        } catch (EntityNotFoundException e) {
+            throw new ResourceNotFoundException("Entity not found.");
         }
         return new TransactionResponseOperationDto(transaction, account.getBalance());
     }
+
+    public List<TransactionResponseExtractDto> extract(Long id) {
+        List<Transaction> transactions = transactionRepository.findByAccountId(id);
+        return transactions.stream()
+                .map(item -> modelMapper.map(item, TransactionResponseExtractDto.class))
+                .collect(Collectors.toList());
+    }
+
 }

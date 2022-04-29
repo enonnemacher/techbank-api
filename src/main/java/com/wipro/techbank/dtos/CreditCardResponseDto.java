@@ -1,5 +1,6 @@
 package com.wipro.techbank.dtos;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.wipro.techbank.domain.CreditCard;
 import lombok.*;
 import org.hibernate.validator.constraints.Range;
@@ -22,6 +23,7 @@ public class CreditCardResponseDto implements Serializable {
 
     private String cardNumber;
 
+    @JsonFormat(pattern = "dd-MM-yyyy")
     private LocalDateTime expirationDate;
 
     private Short securityCode;

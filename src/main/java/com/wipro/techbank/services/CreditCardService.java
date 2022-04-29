@@ -16,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
-
 @Service
 public class CreditCardService {
 
@@ -38,7 +37,8 @@ public class CreditCardService {
     @Transactional(readOnly = true)
     public CreditCardResponseDto findById(Long id) {
         Optional<CreditCard> optionalCreditCard = creditCardRepository.findById(id);
-        CreditCard entity = optionalCreditCard.orElseThrow(() -> new ResourceNotFoundException("Entidade não econtrada."));
+        CreditCard entity = optionalCreditCard
+                .orElseThrow(() -> new ResourceNotFoundException("Entity not found."));
         return new CreditCardResponseDto(entity);
     }
 
@@ -46,11 +46,10 @@ public class CreditCardService {
         try {
             creditCardRepository.deleteById(id);
         } catch (EmptyResultDataAccessException e) {
-            throw new ResourceNotFoundException("Id " + id + " não encontrado.");
+            throw new ResourceNotFoundException("Id " + id + " not found.");
         } catch (DataIntegrityViolationException e) {
-            throw new DataBasesException("Violação de integridade.");
+            throw new DataBasesException("Integrity violation.");
         }
     }
-
 
 }

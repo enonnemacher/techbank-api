@@ -23,4 +23,5 @@ public class CheckingAccountResponseDto {
     private String creditCardCardNumber;
 
     private Double creditCardLimitCredit;
+
 }

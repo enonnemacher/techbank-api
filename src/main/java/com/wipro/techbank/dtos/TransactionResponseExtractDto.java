@@ -16,10 +16,8 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @ToString
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class TransactionResponseDto implements Serializable {
-    private static final long serialVersionUID = 377217321776086460L;
-
-    private Long id;
+public class TransactionResponseExtractDto implements Serializable {
+    private static final long serialVersionUID = 3351126276354159130L;
 
     private LocalDateTime createdAt;
 
@@ -28,16 +26,5 @@ public class TransactionResponseDto implements Serializable {
 
     @NotNull(message = "Valor da operação é obrigatório.")
     private Double value;
-
-    @NotNull(message = "O tipo da conta é obrigatório.")
-    private AccountType accountType;
-
-    public TransactionResponseDto(Transaction entity) {
-        id = entity.getId();
-        createdAt = entity.getCreatedAt();
-        operation = entity.getOperation();
-        value = entity.getValue();
-        accountType = entity.getAccountType();
-    }
 
 }

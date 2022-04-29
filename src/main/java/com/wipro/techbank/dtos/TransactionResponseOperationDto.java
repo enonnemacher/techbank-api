@@ -1,5 +1,6 @@
 package com.wipro.techbank.dtos;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.wipro.techbank.domain.AccountType;
 import com.wipro.techbank.domain.Operation;
 import com.wipro.techbank.domain.Transaction;
@@ -20,7 +21,7 @@ public class TransactionResponseOperationDto implements Serializable {
 
     private Long id;
 
-    private LocalDateTime date;
+    private LocalDateTime createdAt;
 
     @NotNull(message = "Descrição da operação obrigatória.")
     private Operation operation;
@@ -35,7 +36,7 @@ public class TransactionResponseOperationDto implements Serializable {
 
     public TransactionResponseOperationDto(Transaction entity) {
         id = entity.getId();
-        date = entity.getCreatedAt();
+        createdAt = entity.getCreatedAt();
         operation = entity.getOperation();
         value = entity.getValue();
         accountType = entity.getAccountType();

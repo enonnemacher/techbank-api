@@ -1,4 +1,5 @@
 package com.wipro.techbank.domain;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.wipro.techbank.Utils.Utils;
 import lombok.*;
 
