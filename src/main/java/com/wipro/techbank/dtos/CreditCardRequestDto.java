@@ -1,6 +1,7 @@
 package com.wipro.techbank.dtos;
 
 import com.wipro.techbank.domain.CreditCard;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 
 import javax.validation.constraints.NotNull;
@@ -15,15 +16,12 @@ import java.io.Serializable;
 public class CreditCardRequestDto implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    @EqualsAndHashCode.Include
-    private Long id;
-
     @NotNull
+    @ApiModelProperty(notes = "Credit card limit", example = "800.00", allowableValues = "200.00, 5000.00", required = true)
     private Double limitCredit;
 
 
     public CreditCardRequestDto(CreditCard entity) {
-        id = entity.getId();
         limitCredit = entity.getLimitCredit();
     }
 }

@@ -24,7 +24,6 @@ public class TransactionRequestDto implements Serializable {
     @NotNull(message = "O tipo da conta é obrigatório.")
     private AccountType accountType;
 
-
     public TransactionRequestDto(Transaction entity) {
         value = entity.getValue();
         accountType = entity.getAccountType();
