@@ -1,8 +1,10 @@
 package com.wipro.techbank.services;
 
 import com.wipro.techbank.domain.AccountType;
+import com.wipro.techbank.domain.Operation;
 import com.wipro.techbank.domain.SpecialAccount;
 import com.wipro.techbank.dtos.TransactionRequestDto;
+import com.wipro.techbank.dtos.TransactionResponseExtractDto;
 import com.wipro.techbank.dtos.TransactionResponseOperationDto;
 import com.wipro.techbank.repositories.CheckingAccountRepository;
 import com.wipro.techbank.repositories.SpecialAccountRepository;
@@ -14,6 +16,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 @SpringBootTest
 @Transactional
@@ -48,8 +53,11 @@ public class TransactionServiceTestIT{
 
     @Test
     public void checkingAccountDepositShouldReturnResourceNotFoundExceptionWhenIdDoesNotExists() {
+        TransactionRequestDto transactionRequestDto = new TransactionRequestDto();
+        transactionRequestDto.setValue(200.00);
+        transactionRequestDto.setAccountType(AccountType.CHECKING_ACCOUNT);
         Assertions.assertThrows(ResourceNotFoundException.class, () -> {
-            transactionService.deposit(100L, FactoryTransactions.TRANSACTION_CHEKING_ACCOUNT_REQUEST_DTO);
+            transactionService.deposit(100L, transactionRequestDto);
         });
     }
 
@@ -81,7 +89,9 @@ public class TransactionServiceTestIT{
 
     @Test
     public void checkingAccountWithDrawShouldReturnResourceNotFoundExceptionWhenWithdrawIsGreaterThanBalance() {
-        TransactionRequestDto transactionRequestDto = FactoryTransactions.TRANSACTION_CHEKING_ACCOUNT_REQUEST_DTO;
+        TransactionRequestDto transactionRequestDto = new TransactionRequestDto();
+        transactionRequestDto.setValue(200.00);
+        transactionRequestDto.setAccountType(AccountType.CHECKING_ACCOUNT);
         transactionRequestDto.setValue(1800.00);
         Assertions.assertThrows(ResourceNotFoundException.class, () -> {
             transactionService.withdraw(3L, transactionRequestDto);
@@ -90,23 +100,34 @@ public class TransactionServiceTestIT{
 
     @Test
     public void checkingAccountWithDrawShouldReturnResourceNotFoundExceptionWhenIdDoesNotExists() {
+        TransactionRequestDto transactionRequestDto = new TransactionRequestDto();
+        transactionRequestDto.setValue(200.00);
+        transactionRequestDto.setAccountType(AccountType.CHECKING_ACCOUNT);
+        transactionRequestDto.setValue(1800.00);
         Assertions.assertThrows(ResourceNotFoundException.class, () -> {
-            transactionService.withdraw(100L, FactoryTransactions.TRANSACTION_CHEKING_ACCOUNT_REQUEST_DTO);
+            transactionService.withdraw(100L, transactionRequestDto);
         });
     }
 
     @Test
     public void specialAccountDepositShouldReturnNewBalanceWhenIdExists() {
         Double expectedBalance = 1900.00;
-        TransactionResponseOperationDto response = transactionService.deposit(7L, FactoryTransactions.TRANSACTION_SPECIAL_ACCOUNT_REQUEST_DTO);
+        TransactionRequestDto transactionRequestDto = new TransactionRequestDto();
+        transactionRequestDto.setAccountType(AccountType.SPECIAL_ACCOUNT);
+        transactionRequestDto.setValue(200.00);
+        TransactionResponseOperationDto response = transactionService.deposit(7L, transactionRequestDto);
         Assertions.assertNotNull(response);
         Assertions.assertEquals(response.getBalance(), expectedBalance);
     }
 
     @Test
     public void specialAccountDepositShouldReturnResourceNotFoundExceptionWhenIdDoesNotExists() {
+        TransactionRequestDto transactionRequestDto = new TransactionRequestDto();
+        transactionRequestDto.setValue(200.00);
+        transactionRequestDto.setAccountType(AccountType.CHECKING_ACCOUNT);
+        transactionRequestDto.setValue(1800.00);
         Assertions.assertThrows(ResourceNotFoundException.class, () -> {
-            transactionService.deposit(100L, FactoryTransactions.TRANSACTION_SPECIAL_ACCOUNT_REQUEST_DTO);
+            transactionService.deposit(100L, transactionRequestDto);
         });
     }
 
@@ -233,5 +254,10 @@ public class TransactionServiceTestIT{
         Assertions.assertThrows(ResourceNotFoundException.class, () -> {
             transactionService.withdraw(100L, transactionRequestDto);
         });
+    }
+    @Test
+    public void extractShouldReturnListWhenIdExists() {
+        List<TransactionResponseExtractDto> response =  transactionService.extract(1L);
+        Assertions.assertNotNull(response);
     }
 }
